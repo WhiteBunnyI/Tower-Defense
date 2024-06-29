@@ -24,11 +24,14 @@ namespace my
 	struct Noise_Output
 	{
 	private:
+		bool m_isMain;
 		Vector2I m_size;
 		uint8_t** m_data;
 	public:
 		Noise_Output() = default;
 		Noise_Output(Vector2I size);
+		Noise_Output(const Noise_Output& other);
+		Noise_Output& operator=(const Noise_Output& other);
 		~Noise_Output();
 		uint8_t* operator[](std::size_t idx);
 

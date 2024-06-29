@@ -1,6 +1,6 @@
 #include <Noise.hpp>
 
-my::Noise_Output::Noise_Output(Vector2I size) : m_size{ size }, m_data{ new uint8_t*[size.x]}
+my::Noise_Output::Noise_Output(Vector2I size) : m_isMain{ true }, m_size{ size }, m_data{ new uint8_t * [size.x] }
 {	
 	for (int i = 0; i < size.x; ++i)
 	{
@@ -8,11 +8,24 @@ my::Noise_Output::Noise_Output(Vector2I size) : m_size{ size }, m_data{ new uint
 	}
 }
 
+my::Noise_Output::Noise_Output(const Noise_Output& other) :
+	m_data{ other.m_data }, m_size{ other.m_size }, m_isMain{ false } { }
+
+my::Noise_Output& my::Noise_Output::operator=(const Noise_Output& other)
+{
+	m_data = other.m_data; 
+	m_size = other.m_size; 
+	m_isMain = false;
+}
+
 my::Noise_Output::~Noise_Output()
 {
-	for (int x = 0; x < m_size.x; ++x)
+	if(m_isMain)
 	{
-		delete[] m_data[x];
+		for (int x = 0; x < m_size.x; ++x)
+		{
+			delete[] m_data[x];
+		}
 	}
 }
 
