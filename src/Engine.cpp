@@ -1,6 +1,6 @@
 #include <Engine.hpp>
 
-Engine::Engine()
+Engine::Engine() : map{Vector2(200,200)}
 {
 	if (Engine::instance != nullptr)
 	{
@@ -8,8 +8,9 @@ Engine::Engine()
 		throw new std::runtime_error("Trying create a new engine!");
 	}
 	Engine::instance = this;
-	map = MapGenerator(200, 200);
 }
+
+
 
 bool Engine::IsPlaying()
 {
