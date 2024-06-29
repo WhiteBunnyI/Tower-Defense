@@ -7,15 +7,14 @@
 class MapGenerator
 {
 	int m_seed;
-	int m_mapSizeX;
-	int m_mapSizeY;
+	Vector2I m_size;
 	my::Noise_Output m_dataHeight;
 	my::Noise_Output m_dataTemp;
 	Tile* m_map;
 
 public:
 	MapGenerator() = default;
-	MapGenerator(Vector2 size);
+	MapGenerator(Vector2I size);
 	MapGenerator(const MapGenerator& other) = delete;
 	MapGenerator& operator=(const MapGenerator& other) = delete;
 	~MapGenerator();
