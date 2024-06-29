@@ -18,19 +18,20 @@ namespace my
 		/// <param name="gridSize">Размер сетки</param>
 		/// <param name="texSize">Размер выходных данных</param>
 		/// <returns>Возращяет массив размером [dataSize.x, dataSize.y]</returns>
-		static Noise_Output& GetNoise(int seed, Vector2 gridSize, Vector2 dataSize);
+		static Noise_Output& GetNoise(int seed, Vector2I gridSize, Vector2I dataSize);
 	};
 
 	struct Noise_Output
 	{
 	private:
-		Vector2 m_size;
-		std::shared_ptr<uint8_t*> m_data;
+		Vector2I m_size;
+		uint8_t** m_data;
 	public:
 		Noise_Output() = default;
-		Noise_Output(Vector2 size);
+		Noise_Output(Vector2I size);
+		~Noise_Output();
 		uint8_t* operator[](std::size_t idx);
-		
-		friend static Noise_Output& Perlin_Noise::GetNoise(int, Vector2, Vector2);
+
+		friend static Noise_Output& Perlin_Noise::GetNoise(int, Vector2I, Vector2I);
 	};
 }

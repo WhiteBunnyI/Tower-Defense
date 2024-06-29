@@ -1,24 +1,28 @@
 #include <Noise.hpp>
 
-my::Noise_Output::Noise_Output(Vector2 size) : m_size{ size }, m_data{ new uint8_t * [((int)size.x)], [this](auto p) {
-		for (int i = 0; i < m_size.x; ++i)
-		{
-			delete[] m_data.get()[i];
-		}
-	} }
+my::Noise_Output::Noise_Output(Vector2I size) : m_size{ size }, m_data{ new uint8_t*[size.x]}
 {	
-	for (int i = 0; i < m_size.x; ++i)
+	for (int i = 0; i < size.x; ++i)
 	{
-		m_data.get()[i] = new uint8_t[m_size.y];
+		m_data[i] = new uint8_t[size.y];
 	}
 }
 
-uint8_t* my::Noise_Output::operator[](std::size_t idx)
+my::Noise_Output::~Noise_Output()
 {
-	return m_data.get()[idx];
+	for (int x = 0; x < m_size.x; ++x)
+	{
+		delete[] m_data[x];
+	}
 }
 
-my::Noise_Output& my::Perlin_Noise::GetNoise(int seed, Vector2 gridSize, Vector2 dataSize)
+
+uint8_t* my::Noise_Output::operator[](std::size_t idx)
+{
+	return m_data[idx];
+}
+
+my::Noise_Output& my::Perlin_Noise::GetNoise(int seed, Vector2I gridSize, Vector2I dataSize)
 {
 	Noise_Output* result = new Noise_Output(dataSize);
 	std::srand(seed);
@@ -78,7 +82,7 @@ my::Noise_Output& my::Perlin_Noise::GetNoise(int seed, Vector2 gridSize, Vector2
 					float noise = mix(uv, st, int_y) * 0.5f + 0.5f;
 
 					c = c * noise;
-					result->m_data.get()[x + x_s * (int)dx][y + y_s * (int)dy] = c;
+					result->m_data[x + x_s * (int)dx][y + y_s * (int)dy] = c;
 				}
 			}
 		}
