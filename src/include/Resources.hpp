@@ -10,9 +10,10 @@ public:
 	{
 		wood,
 		iron,
-		gold
+		gold,
+		oil
 	};
 
-	std::map<resource, int> resources{ {wood, 0}, {iron, 0}, {gold, 0} };
+	std::map<resource, int> resources{ {wood, 0}, {iron, 0}, {gold, 0}, {oil,0} };
 	
 };

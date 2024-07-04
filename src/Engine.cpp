@@ -1,6 +1,6 @@
 #include <Engine.hpp>
 
-Engine::Engine() : map{Vector2(200,200)}
+Engine::Engine(int gameWidth, int gameHeight) : m_gameHeight{ gameHeight }, m_gameWidth{ gameWidth }
 {
 	if (Engine::instance != nullptr)
 	{
@@ -10,27 +10,26 @@ Engine::Engine() : map{Vector2(200,200)}
 	Engine::instance = this;
 }
 
-
-
 bool Engine::IsPlaying()
 {
 	return isPlaying;
 }
 
 
-void Engine::CrankUp(int gameWidth, int gameHeight)
+void Engine::CrankUp()
 {
-	sf::RenderWindow window(sf::VideoMode(static_cast<unsigned int>(gameWidth), static_cast<unsigned int>(gameHeight), 32), "Tower Defense",
+	isPlaying = true;
+	sf::RenderWindow window(sf::VideoMode(static_cast<unsigned int>(m_gameWidth), static_cast<unsigned int>(m_gameHeight), 32), "Tower Defense",
 		sf::Style::Titlebar | sf::Style::Close);
 	window.setVerticalSyncEnabled(true);
 
 	for (auto iterStart = m_gameObjects.begin(); iterStart != m_gameObjects.end(); ++iterStart)
 	{
-		iterStart->Start();
+		(*iterStart)->Start();
 	}
 
 	sf::Clock clock;
-	isPlaying = true;
+	
 	while (window.isOpen())
 	{
 		// Handle events
@@ -65,12 +64,11 @@ void Engine::CrankUp(int gameWidth, int gameHeight)
 		}
 
 		window.clear();
-		if (!m_drawable.empty())
+		if (!m_gameObjects.empty())
 		{
-			for (auto iter = m_drawable.begin(); iter != m_drawable.end(); ++iter)
+			for (auto iter = m_gameObjects.begin(); iter != m_gameObjects.end(); ++iter)
 			{
-				if (*iter != nullptr)
-					window.draw(**iter);
+				window.draw((*iter)->render);
 			}
 		}
 		window.display();

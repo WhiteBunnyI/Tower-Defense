@@ -16,21 +16,19 @@ class Engine
 {
 	bool isPlaying = false;
 public:
-
+	int m_gameWidth; 
+	int m_gameHeight;
 	static inline Engine* instance{nullptr};
 
-	MapGenerator map;
-
-	std::list<GameObject> m_gameObjects;
+	std::list<GameObject*> m_gameObjects;
 	std::list<Coroutine> m_coroutines;
-	std::list<sf::Drawable*> m_drawable;
 
-	Engine();
+	Engine(int gameWidth, int gameHeight);
 
 	Engine(const Engine& engine) = delete;
 	Engine& operator=(const Engine& other) = delete;
 
-	void CrankUp(int gameWidth, int gameHeight);
+	void CrankUp();
 
 	bool IsPlaying();
 };

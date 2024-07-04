@@ -11,6 +11,7 @@ struct Tile
 		grass,
 		sand,
 		road,
+		rock
 	};
 
 	Type type;

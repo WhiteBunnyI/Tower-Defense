@@ -7,10 +7,12 @@
 class MapGenerator
 {
 	int m_seed;
+	const int m_texturesSize = 16;
+	my::Noise_Output* m_dataHeight;
+	my::Noise_Output* m_dataTemp;
 	Vector2I m_size;
-	my::Noise_Output m_dataHeight;
-	my::Noise_Output m_dataTemp;
 	Tile* m_map;
+	sf::Sprite m_mapObject;
 
 public:
 	MapGenerator() = default;
@@ -19,9 +21,9 @@ public:
 	MapGenerator& operator=(const MapGenerator& other) = delete;
 	~MapGenerator();
 
-	my::Noise_Output& getData1() { return m_dataHeight; }
+	my::Noise_Output& getDataHeight() { return *m_dataHeight; }
 
-	my::Noise_Output& getData2() { return m_dataTemp; }
+	my::Noise_Output& getDataTemp() { return *m_dataTemp; }
 
 };
 
