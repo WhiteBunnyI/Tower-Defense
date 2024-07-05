@@ -1,5 +1,5 @@
 #include <Engine.hpp>
-
+#include <Camera.hpp>
 sf::Image NoiseToImage(my::Noise_Output& noise)
 {
 	sf::Image result;
@@ -28,5 +28,14 @@ int main()
 	height.saveToFile("./HeightMap.png");
 	temp.saveToFile("./TempMap.png");
 	engine.CrankUp();
+
+	//Придумать, как это сделать :D
+	Camera camera;
+	void (Camera::*movePtr)(Vector2) = Camera::Move;
+	auto o = sf::Event::KeyPressed;
+	auto w = []() {camera.*movePtr(0, 1); }
+	EventHolder onW(o, sf::Keyboard::W, []()());
+	
+
 	return 0;
 }

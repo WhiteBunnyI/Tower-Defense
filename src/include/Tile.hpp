@@ -4,6 +4,7 @@
 
 struct Tile
 {
+
 	enum Type : char
 	{
 		water,
@@ -11,14 +12,18 @@ struct Tile
 		grass,
 		sand,
 		road,
-		rock
+		rock,
+		rocky_surface,
+		snow,
 	};
 
 	Type type;
 
 	Tile();
 
+	Tile(Type _type);
+
 	static float MoveSpeed(Type type);
 
-	static sf::Texture Texture(Type type);
+	static sf::Image* Image(Type type);
 };

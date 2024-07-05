@@ -21,6 +21,6 @@ Coroutine::Coroutine(void (*func)(), float sec)
 
 void Coroutine::Start()
 {
-	Engine::instance->m_coroutines.push_back(*this);
+	Engine::instance->m_coroutines.push_back(this);
 }
 

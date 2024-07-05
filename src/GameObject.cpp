@@ -8,12 +8,14 @@ void GameObject::Initialize()
 	
 GameObject::GameObject()
 {
+	render = sf::Sprite();
 	Initialize();
 }
 
-GameObject::GameObject(Vector2 position, sf::Texture* texture)
+GameObject::GameObject(Vector2 position, sf::Texture* texture) : GameObject()
 {
-	render = sf::Sprite(*texture);
+	if (texture != nullptr)
+		render.setTexture(*texture, true);
 	render.setPosition(position.x, position.y);
 	Initialize();
 }

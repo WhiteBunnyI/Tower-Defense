@@ -22,7 +22,8 @@ void Engine::CrankUp()
 	sf::RenderWindow window(sf::VideoMode(static_cast<unsigned int>(m_gameWidth), static_cast<unsigned int>(m_gameHeight), 32), "Tower Defense",
 		sf::Style::Titlebar | sf::Style::Close);
 	window.setVerticalSyncEnabled(true);
-
+	m_view = new sf::View(sf::Vector2f(m_gameWidth / 2.f, m_gameHeight / 2.f), sf::Vector2f(m_gameWidth, m_gameHeight));
+	window.setView(*m_view);
 	for (auto iterStart = m_gameObjects.begin(); iterStart != m_gameObjects.end(); ++iterStart)
 	{
 		(*iterStart)->Start();
