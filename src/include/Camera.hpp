@@ -3,13 +3,10 @@
 class Camera : public IUpdateable
 {
 public:
-	bool m_down;
-	bool m_up;
-	bool m_right;
-	bool m_left;
 	float speed;
+	float sprintMul;
 
-	Camera(float speed) : IUpdateable(), speed{speed}, m_down{false}, m_up{false}, m_left{false}, m_right{false}
+	Camera(float speed, float sprintMultiple) : IUpdateable(), speed{ speed }, sprintMul{ sprintMultiple }
 	{
 
 	}

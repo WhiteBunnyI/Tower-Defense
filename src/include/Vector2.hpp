@@ -15,6 +15,20 @@ struct Vector2
 		this->y = y;
 	}
 
+	Vector2& operator+(const Vector2& other)
+	{
+		Vector2 temp(*this);
+		temp += other;
+		return temp;
+	}
+
+	Vector2& operator+=(const Vector2& other)
+	{
+		x += other.y;
+		y += other.y;
+		return *this;
+	}
+
 	Vector2& operator-(const Vector2& other)
 	{
 		Vector2 temp(*this);
@@ -40,6 +54,20 @@ struct Vector2
 	{
 		x /= num;
 		y /= num;
+		return *this;
+	}
+
+	Vector2& operator*(float num)
+	{
+		Vector2 temp(*this);
+		temp *= num;
+		return temp;
+	}
+
+	Vector2& operator*=(float num)
+	{
+		x *= num;
+		y *= num;
 		return *this;
 	}
 

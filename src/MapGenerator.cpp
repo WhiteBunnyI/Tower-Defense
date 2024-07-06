@@ -69,13 +69,19 @@ MapGenerator::MapGenerator(Vector2I size) :
 			{
 				if (b >= 0.45f && b <= 0.55f)
 				{
-					if(h <= 0.35f)
+					if(b >= 0.455f && b <= 0.545f && h <= 0.35f)
 					{
 						m_map[x + y * m_size.x] = Tile(Tile::water);
 						map.copy(*water, x * m_texturesSize, y * m_texturesSize);
 						continue;
 					}
-					if (h > 0.35f && h < 0.4f)
+					//if (h <= 0.39f)
+					//{
+					//	m_map[x + y * m_size.x] = Tile(Tile::sand);
+					//	map.copy(*sand, x * m_texturesSize, y * m_texturesSize);
+					//	continue;
+					//}
+					if (h <= 0.41f)
 					{
 						m_map[x + y * m_size.x] = Tile(Tile::soil);
 						map.copy(*soil, x * m_texturesSize, y * m_texturesSize);

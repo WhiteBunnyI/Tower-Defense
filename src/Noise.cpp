@@ -14,7 +14,7 @@ my::Noise_Output::Noise_Output(const Noise_Output& other) :
 my::Noise_Output& my::Noise_Output::operator=(const Noise_Output& other)
 {
 	m_data = other.m_data; 
-	m_size = other.m_size; 
+	m_size = other.m_size;
 	m_isMain = false;
 	return *this;
 }

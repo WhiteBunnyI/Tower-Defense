@@ -28,39 +28,7 @@ int main()
 	height.saveToFile("./HeightMap.png");
 	temp.saveToFile("./TempMap.png");
 
-	//Придумать, как это сделать :D
-	Camera camera(6);
-	auto moveLambda{ [](sf::Event& event, EventHolder<Camera*>& holder)
-		{
-			switch (event.type)
-			{
-			case sf::Event::KeyPressed:
-				if (event.key.code == sf::Keyboard::W)
-					holder.get<0>()->m_up = true;
-				else if (event.key.code == sf::Keyboard::S)
-					holder.get<0>()->m_down = true;
-				else if (event.key.code == sf::Keyboard::A)
-					holder.get<0>()->m_left = true;
-				else if (event.key.code == sf::Keyboard::D)
-					holder.get<0>()->m_right = true;
-				break;
-
-			case sf::Event::KeyReleased:
-				if (event.key.code == sf::Keyboard::W)
-					holder.get<0>()->m_up = false;
-				else if (event.key.code == sf::Keyboard::S)
-					holder.get<0>()->m_down = false;
-				else if (event.key.code == sf::Keyboard::A)
-					holder.get<0>()->m_left = false;
-				else if (event.key.code == sf::Keyboard::D)
-					holder.get<0>()->m_right = false;
-				break;
-			}
-		} 
-	};
-	EventHolder<Camera*> onW(moveLambda, &camera);
-
-	
+	Camera camera(60, 4);
 	engine.CrankUp();
 
 	return 0;

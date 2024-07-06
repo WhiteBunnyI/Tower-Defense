@@ -17,6 +17,7 @@ class Engine
 {
 	bool isPlaying = false;
 public:
+	float deltaTime;
 	int m_gameWidth; 
 	int m_gameHeight;
 	sf::View* m_view;
