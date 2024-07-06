@@ -27,15 +27,41 @@ int main()
 	sf::Image temp(NoiseToImage(map.getDataTemp()));
 	height.saveToFile("./HeightMap.png");
 	temp.saveToFile("./TempMap.png");
-	engine.CrankUp();
 
 	//Придумать, как это сделать :D
-	Camera camera;
-	void (Camera::*movePtr)(Vector2) = Camera::Move;
-	auto o = sf::Event::KeyPressed;
-	auto w = []() {camera.*movePtr(0, 1); }
-	EventHolder onW(o, sf::Keyboard::W, []()());
+	Camera camera(6);
+	auto moveLambda{ [](sf::Event& event, EventHolder<Camera*>& holder)
+		{
+			switch (event.type)
+			{
+			case sf::Event::KeyPressed:
+				if (event.key.code == sf::Keyboard::W)
+					holder.get<0>()->m_up = true;
+				else if (event.key.code == sf::Keyboard::S)
+					holder.get<0>()->m_down = true;
+				else if (event.key.code == sf::Keyboard::A)
+					holder.get<0>()->m_left = true;
+				else if (event.key.code == sf::Keyboard::D)
+					holder.get<0>()->m_right = true;
+				break;
+
+			case sf::Event::KeyReleased:
+				if (event.key.code == sf::Keyboard::W)
+					holder.get<0>()->m_up = false;
+				else if (event.key.code == sf::Keyboard::S)
+					holder.get<0>()->m_down = false;
+				else if (event.key.code == sf::Keyboard::A)
+					holder.get<0>()->m_left = false;
+				else if (event.key.code == sf::Keyboard::D)
+					holder.get<0>()->m_right = false;
+				break;
+			}
+		} 
+	};
+	EventHolder<Camera*> onW(moveLambda, &camera);
+
 	
+	engine.CrankUp();
 
 	return 0;
 }

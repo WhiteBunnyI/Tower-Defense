@@ -20,11 +20,15 @@ public:
 	int m_gameWidth; 
 	int m_gameHeight;
 	sf::View* m_view;
+	sf::RenderWindow* m_window;
 	static inline Engine* instance{nullptr};
 
-	std::list<GameObject*> m_gameObjects;
+	std::list<IUpdateable*> m_update;
+	std::list<IStartable*> m_start;
+	std::list<IRenderable*> m_render;
+
 	std::list<Coroutine*> m_coroutines;
-	std::list<EventHolder*> m_events;
+	std::list<BaseEventHolder*> m_events;
 
 	Engine(int gameWidth, int gameHeight);
 
@@ -34,6 +38,8 @@ public:
 	void CrankUp();
 
 	bool IsPlaying();
+
+	void UpdateView();
 };
 
 

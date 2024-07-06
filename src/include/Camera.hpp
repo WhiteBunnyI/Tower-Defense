@@ -1,9 +1,21 @@
-#include <IMovable.hpp>
+#include <IUpdateable.hpp>
 
-class Camera : public IMovable
+class Camera : public IUpdateable
 {
 public:
-	void Move(Vector2 newPos) override;
+	bool m_down;
+	bool m_up;
+	bool m_right;
+	bool m_left;
+	float speed;
+
+	Camera(float speed) : IUpdateable(), speed{speed}, m_down{false}, m_up{false}, m_left{false}, m_right{false}
+	{
+
+	}
+
+	void Update() override;
+
 };
 
 #include <Engine.hpp>

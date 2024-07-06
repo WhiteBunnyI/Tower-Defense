@@ -1,6 +1,6 @@
 #include <Engine.hpp>
 
-Engine::Engine(int gameWidth, int gameHeight) : m_gameHeight{ gameHeight }, m_gameWidth{ gameWidth }
+Engine::Engine(int gameWidth, int gameHeight) : m_gameHeight{ gameHeight }, m_gameWidth{ gameWidth }, m_view{nullptr}, m_window{nullptr}
 {
 	if (Engine::instance != nullptr)
 	{
@@ -15,6 +15,11 @@ bool Engine::IsPlaying()
 	return isPlaying;
 }
 
+void Engine::UpdateView()
+{
+	m_window->setView(*m_view);
+}
+
 
 void Engine::CrankUp()
 {
@@ -22,9 +27,13 @@ void Engine::CrankUp()
 	sf::RenderWindow window(sf::VideoMode(static_cast<unsigned int>(m_gameWidth), static_cast<unsigned int>(m_gameHeight), 32), "Tower Defense",
 		sf::Style::Titlebar | sf::Style::Close);
 	window.setVerticalSyncEnabled(true);
+	m_window = &window;
+
 	m_view = new sf::View(sf::Vector2f(m_gameWidth / 2.f, m_gameHeight / 2.f), sf::Vector2f(m_gameWidth, m_gameHeight));
 	window.setView(*m_view);
-	for (auto iterStart = m_gameObjects.begin(); iterStart != m_gameObjects.end(); ++iterStart)
+
+	//Start Invoke
+	for (auto iterStart = m_start.begin(); iterStart != m_start.end(); ++iterStart)
 	{
 		(*iterStart)->Start();
 	}
@@ -45,14 +54,22 @@ void Engine::CrankUp()
 				break;
 			}
 
+			//Event Invoke
+			for (auto iter = m_events.begin(); iter != m_events.end(); ++iter)
+			{
+				(*iter)->Call(event);
+			}
+
 		}
 
 		if (isPlaying)
 		{
 			float deltaTime = clock.restart().asSeconds();
+
+			//Coroutines Invoke
 			for (auto iterCoroutine = m_coroutines.begin(); iterCoroutine != m_coroutines.end(); ++iterCoroutine)
 			{
-				if (iterCoroutine->Tick(deltaTime))
+				if ((*iterCoroutine)->Tick(deltaTime))
 				{
 					iterCoroutine = m_coroutines.erase(iterCoroutine);
 					if (iterCoroutine == m_coroutines.end())
@@ -62,14 +79,24 @@ void Engine::CrankUp()
 				}
 
 			}
+
+			//Update Invoke
+			for (auto iter = m_update.begin(); iter != m_update.end(); ++iter)
+			{
+				(*iter)->Update();
+			}
 		}
 
 		window.clear();
-		if (!m_gameObjects.empty())
+
+		//Render Invoke
+		if (!m_render.empty())
 		{
-			for (auto iter = m_gameObjects.begin(); iter != m_gameObjects.end(); ++iter)
+			for (auto iter = m_render.begin(); iter != m_render.end(); ++iter)
 			{
-				window.draw((*iter)->render);
+				auto p = (*iter)->render;
+				if(p != nullptr)
+					window.draw(*p);
 			}
 		}
 		window.display();

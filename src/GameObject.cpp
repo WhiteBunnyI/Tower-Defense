@@ -1,36 +1,10 @@
 #include <GameObject.hpp>
-
-
-void GameObject::Initialize()
-{
-	Engine::instance->m_gameObjects.push_back(this);
-}
 	
-GameObject::GameObject()
-{
-	render = sf::Sprite();
-	Initialize();
-}
+GameObject::GameObject() : IUpdateable(), IStartable(), IRenderable(nullptr) { }
 
-GameObject::GameObject(Vector2 position, sf::Texture* texture) : GameObject()
+GameObject::GameObject(Vector2 position, sf::Texture* texture) : IUpdateable(), IStartable(), IRenderable(texture)
 {
-	if (texture != nullptr)
-		render.setTexture(*texture, true);
-	render.setPosition(position.x, position.y);
-	Initialize();
-}
-
-GameObject::GameObject(const GameObject& other) : render{ other.render } {}
-
-GameObject& GameObject::operator=(const GameObject& other)
-{
-	render = other.render;
-	return *this;
-}
-
-GameObject::~GameObject()
-{
-	delete render.getTexture();
+	render->setPosition(position.x, position.y);
 }
 
 void GameObject::SetScale(Vector2& scale)
@@ -39,7 +13,7 @@ void GameObject::SetScale(Vector2& scale)
 }
 void GameObject::SetScale(float x, float y)
 {
-	render.setScale(x, y);
+	render->setScale(x, y);
 }
 
 void GameObject::SetPosition(Vector2& pos)
@@ -48,7 +22,7 @@ void GameObject::SetPosition(Vector2& pos)
 }
 void GameObject::SetPosition(float x, float y)
 {
-	render.setPosition(x, y);
+	render->setPosition(x, y);
 }
 
 

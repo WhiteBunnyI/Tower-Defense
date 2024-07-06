@@ -2,15 +2,30 @@
 
 #include <SFML/Graphics.hpp>
 
-struct EventHolder
+struct BaseEventHolder
 {
-	sf::Event::EventType eventType;
-	sf::Keyboard listenButton;
-	void (*func)();
+	virtual void Call(sf::Event& event) = 0;
+};
 
-	EventHolder(sf::Event::EventType eventType, sf::Keyboard onButton, void (*whatToCall)()) : eventType{ eventType }, listenButton{ onButton }, func{ whatToCall }
+template<typename... Args>
+struct EventHolder : BaseEventHolder
+{
+	void (*func)(sf::Event&, EventHolder&);					//Сама ф-ия, которую будем вызывать для обработки
+	std::tuple<Args...> data;								//Данные, которые мы будем использовать в этой функции
+
+	EventHolder(void (*whatToCall)(sf::Event&, EventHolder&), Args... args) : func{whatToCall}, data{args...}
 	{
 		Engine::instance->m_events.push_back(this);
+	}
+
+	template<std::size_t Index>
+	auto get() -> decltype(std::get<Index>(data)) {
+		return std::get<Index>(data);
+	}
+
+	void Call(sf::Event& event) override
+	{
+		func(event, *this);
 	}
 };
 
