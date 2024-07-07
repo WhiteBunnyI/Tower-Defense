@@ -126,6 +126,16 @@ struct Vector2I
 		return *this;
 	}
 
+	bool operator==(Vector2I& other)
+	{
+		return (x == other.x && y == other.y);
+	}
+
+	bool operator!=(Vector2I& other)
+	{
+		return !(x == other.x && y == other.y);
+	}
+
 	Vector2I& Normalize()
 	{
 		float len = std::sqrt(x * x + y * y);

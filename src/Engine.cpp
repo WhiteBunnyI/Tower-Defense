@@ -1,6 +1,6 @@
 #include <Engine.hpp>
 
-Engine::Engine(int gameWidth, int gameHeight) : m_gameHeight{ gameHeight }, m_gameWidth{ gameWidth }, m_view{nullptr}, m_window{nullptr}
+Engine::Engine(int gameWidth, int gameHeight) : m_gameHeight{ gameHeight }, m_gameWidth{ gameWidth }, m_view{nullptr}, m_window{nullptr}, deltaTime{0}
 {
 	if (Engine::instance != nullptr)
 	{
@@ -8,6 +8,11 @@ Engine::Engine(int gameWidth, int gameHeight) : m_gameHeight{ gameHeight }, m_ga
 		throw new std::runtime_error("Trying create a new engine!");
 	}
 	Engine::instance = this;
+	m_window = new sf::RenderWindow(sf::VideoMode(static_cast<unsigned int>(m_gameWidth), static_cast<unsigned int>(m_gameHeight), 32), "Tower Defense",
+		sf::Style::Titlebar | sf::Style::Close);
+	m_window->setVerticalSyncEnabled(true);
+	m_view = new sf::View(sf::Vector2f(m_gameWidth / 2.f, m_gameHeight / 2.f), sf::Vector2f(m_gameWidth, m_gameHeight));
+	m_window->setView(*m_view);
 }
 
 bool Engine::IsPlaying()
@@ -20,17 +25,33 @@ void Engine::UpdateView()
 	m_window->setView(*m_view);
 }
 
+template<typename T>
+void ClearList(std::list<T> lst)
+{
+	for (auto iter = lst.begin(); iter != lst.end(); ++iter)
+	{
+		auto p = (*iter);
+		if(p != nullptr)
+			delete p;
+	}
+}
+
+Engine::~Engine()
+{
+	delete m_view;
+	delete m_window;
+	ClearList(m_update);
+	ClearList(m_coroutines);
+	ClearList(m_events);
+	ClearList(m_start);
+	ClearList(m_manualRender);
+	ClearList(m_render);
+}
+
 
 void Engine::CrankUp()
 {
 	isPlaying = true;
-	sf::RenderWindow window(sf::VideoMode(static_cast<unsigned int>(m_gameWidth), static_cast<unsigned int>(m_gameHeight), 32), "Tower Defense",
-		sf::Style::Titlebar | sf::Style::Close);
-	window.setVerticalSyncEnabled(true);
-	m_window = &window;
-
-	m_view = new sf::View(sf::Vector2f(m_gameWidth / 2.f, m_gameHeight / 2.f), sf::Vector2f(m_gameWidth, m_gameHeight));
-	window.setView(*m_view);
 
 	//Start Invoke
 	for (auto iterStart = m_start.begin(); iterStart != m_start.end(); ++iterStart)
@@ -40,17 +61,17 @@ void Engine::CrankUp()
 
 	sf::Clock clock;
 	
-	while (window.isOpen())
+	while (m_window->isOpen())
 	{
 		// Handle events
 		sf::Event event;
-		while (window.pollEvent(event))
+		while (m_window->pollEvent(event))
 		{
 			// Window closed or escape key pressed: exit
 			if ((event.type == sf::Event::Closed) ||
 				((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape)))
 			{
-				window.close();
+				m_window->close();
 				break;
 			}
 
@@ -87,7 +108,7 @@ void Engine::CrankUp()
 			}
 		}
 
-		window.clear();
+		m_window->clear();
 
 		//Render Invoke
 		if (!m_render.empty())
@@ -96,17 +117,17 @@ void Engine::CrankUp()
 			{
 				auto p = (*iter)->render;
 				if(p != nullptr)
-					window.draw(*p);
+					m_window->draw(*p);
 			}
 
 			for (auto iter = m_manualRender.begin(); iter != m_manualRender.end(); ++iter)
 			{
 				auto p = (*iter);
 				if (p != nullptr)
-					window.draw(*p);
+					m_window->draw(*p);
 			}
 		}
-		window.display();
+		m_window->display();
 
 
 	}

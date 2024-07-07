@@ -2,6 +2,7 @@
 #include <Camera.hpp>
 #include <Coroutine.hpp>
 #include <Mouse.hpp>
+#include <Singleton.hpp>
 
 sf::Image NoiseToImage(my::Noise_Output& noise)
 {
@@ -26,7 +27,11 @@ int main()
 	std::srand(time(0));
 
 	Engine engine(800, 600);
+
+	Singleton singleton;
 	MapGenerator map(Vector2I(200, 200));
+	singleton.map = &map;
+
 	sf::Image height(NoiseToImage(map.getDataHeight()));
 	sf::Image temp(NoiseToImage(map.getDataTemp()));
 	height.saveToFile("./HeightMap.png");
@@ -34,6 +39,7 @@ int main()
 
 	Camera camera(240, 2);
 	Mouse mouse;
+
 	engine.CrankUp();
 
 	return 0;

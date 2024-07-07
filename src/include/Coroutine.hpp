@@ -5,12 +5,14 @@
 class BaseCoroutine
 {
 protected:
+	bool m_isStarted;
 	float m_timer;
 	friend class Engine;
 	virtual bool Tick(float deltaTime) = 0;
 
 public:
-	BaseCoroutine(float timer) : m_timer{ timer } {}
+	BaseCoroutine(float timer) : m_timer{ timer }, m_isStarted{ false } {}
+
 	virtual void Start() = 0;
 
 };
@@ -26,7 +28,6 @@ class Coroutine : public BaseCoroutine
 
 		if (m_timer <= 0.f)
 		{
-			std::cout << "Coroutine" << std::endl;
 			m_func(*this);
 			return true;
 		}
@@ -35,8 +36,16 @@ class Coroutine : public BaseCoroutine
 
 public:
 	Coroutine(void (*func)(Coroutine&), float sec, Args... args) : BaseCoroutine(sec), m_data(args...), m_func{ func } { }
+
+	~Coroutine()
+	{
+		if(m_isStarted)
+			Engine::instance->m_coroutines.remove(this);
+	}
+
 	void Start() override
 	{
+		m_isStarted = true;
 		Engine::instance->m_coroutines.push_back(this);
 	}
 

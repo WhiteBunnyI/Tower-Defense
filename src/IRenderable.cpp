@@ -21,5 +21,6 @@ void IRenderable::Clear()
 			delete render->getTexture();
 		delete render;
 	}
+	Engine::instance->m_render.remove(this);
 }
 	

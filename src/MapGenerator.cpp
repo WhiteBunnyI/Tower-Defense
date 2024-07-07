@@ -98,7 +98,7 @@ MapGenerator::MapGenerator(Vector2I size) :
 	//map.update(forest, 10, 10);
 	sf::Texture* texture = new sf::Texture();
 	texture->loadFromImage(map);
-	auto t = new GameObject(Vector2(0, 0), texture);
+	GameObject* t = new GameObject(Vector2(0, 0), texture);
 	float x = (float)Engine::instance->m_gameWidth / texture->getSize().x;
 	float y = (float)Engine::instance->m_gameHeight / texture->getSize().y;
 	//t->SetScale(x, y);
@@ -110,4 +110,8 @@ MapGenerator::~MapGenerator()
 {
 	if(m_map != nullptr)
 		delete [] m_map;
+	if (m_dataHeight != nullptr)
+		delete m_dataHeight;
+	if (m_dataTemp != nullptr)
+		delete m_dataTemp;
 }

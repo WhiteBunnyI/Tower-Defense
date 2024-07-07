@@ -36,7 +36,7 @@ public:
 	std::list<BaseEventHolder*> m_events;
 
 	Engine(int gameWidth, int gameHeight);
-
+	~Engine();
 	Engine(const Engine& engine) = delete;
 	Engine& operator=(const Engine& other) = delete;
 

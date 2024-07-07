@@ -19,7 +19,7 @@ public:
 	void Update() override {}
 	void Start() override {}
 
-	virtual ~GameObject() = default;
+	~GameObject() override = default;
 
 	void SetScale(Vector2& scale);
 	void SetScale(float x, float y);

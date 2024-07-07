@@ -7,7 +7,7 @@ struct IRenderable
 	sf::Sprite* render;
 	IRenderable(sf::Texture* t);
 
-	~IRenderable();
+	virtual ~IRenderable();
 
 	void Clear();
 };

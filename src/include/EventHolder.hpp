@@ -18,6 +18,11 @@ struct EventHolder : BaseEventHolder
 		Engine::instance->m_events.push_back(this);
 	}
 
+	~EventHolder()
+	{
+		Engine::instance->m_events.remove(this);
+	}
+
 	template<std::size_t Index>
 	auto get() -> decltype(std::get<Index>(data)) {
 		return std::get<Index>(data);

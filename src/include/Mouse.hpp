@@ -4,7 +4,7 @@
 
 class Mouse : IUpdateable
 {
-
+	sf::RenderWindow* window;
 public:
 	bool timer;
 
