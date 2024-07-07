@@ -30,8 +30,9 @@ public:
 	std::list<IUpdateable*> m_update;
 	std::list<IStartable*> m_start;
 	std::list<IRenderable*> m_render;
+	std::list<sf::Drawable*> m_manualRender;
 
-	std::list<Coroutine*> m_coroutines;
+	std::list<BaseCoroutine*> m_coroutines;
 	std::list<BaseEventHolder*> m_events;
 
 	Engine(int gameWidth, int gameHeight);

@@ -1,5 +1,7 @@
 #include <Engine.hpp>
 #include <Camera.hpp>
+#include <Coroutine.hpp>
+#include <Mouse.hpp>
 
 sf::Image NoiseToImage(my::Noise_Output& noise)
 {
@@ -18,6 +20,7 @@ sf::Image NoiseToImage(my::Noise_Output& noise)
 	return result;
 }
 
+
 int main()
 {
 	std::srand(time(0));
@@ -30,6 +33,7 @@ int main()
 	temp.saveToFile("./TempMap.png");
 
 	Camera camera(240, 2);
+	Mouse mouse;
 	engine.CrankUp();
 
 	return 0;

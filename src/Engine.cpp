@@ -98,6 +98,13 @@ void Engine::CrankUp()
 				if(p != nullptr)
 					window.draw(*p);
 			}
+
+			for (auto iter = m_manualRender.begin(); iter != m_manualRender.end(); ++iter)
+			{
+				auto p = (*iter);
+				if (p != nullptr)
+					window.draw(*p);
+			}
 		}
 		window.display();
 
