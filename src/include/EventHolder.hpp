@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+
 
 struct BaseEventHolder
 {
@@ -29,4 +29,3 @@ struct EventHolder : BaseEventHolder
 	}
 };
 
-#include <Engine.hpp>

@@ -1,4 +1,6 @@
-#include <IUpdateable.hpp>
+#pragma once
+
+#include <Engine.hpp>
 
 class Camera : public IUpdateable
 {
@@ -14,5 +16,3 @@ public:
 	void Update() override;
 
 };
-
-#include <Engine.hpp>

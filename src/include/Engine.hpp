@@ -1,17 +1,20 @@
 #pragma once
 
-#include <GameObject.hpp>
-#include <Coroutine.hpp>
-#include <Vector2.hpp>
-#include <MapGenerator.hpp>
-#include <EventHolder.hpp>
-
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <cmath>
 #include <ctime>
 #include <iostream>
 #include <list>
+
+#include <Vector2.hpp>
+#include <IUpdateable.hpp>
+#include <IStartable.hpp>
+#include <IRenderable.hpp>
+#include <GameObject.hpp>
+#include <Coroutine.hpp>
+#include <MapGenerator.hpp>
+#include <EventHolder.hpp>
 
 class Engine
 {

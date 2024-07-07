@@ -1,5 +1,6 @@
 #include <Engine.hpp>
 #include <Camera.hpp>
+
 sf::Image NoiseToImage(my::Noise_Output& noise)
 {
 	sf::Image result;
@@ -28,7 +29,7 @@ int main()
 	height.saveToFile("./HeightMap.png");
 	temp.saveToFile("./TempMap.png");
 
-	Camera camera(60, 4);
+	Camera camera(240, 2);
 	engine.CrankUp();
 
 	return 0;
