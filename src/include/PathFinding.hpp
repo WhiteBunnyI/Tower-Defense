@@ -9,8 +9,7 @@ namespace my
 	class PathFinding
 	{
 		class Node;
-		std::unordered_set<Node*> checked;
-		std::unordered_set<Node*> awaits;
+
 	public:
 		PathFinding() = default;
 
@@ -23,6 +22,9 @@ namespace my
 
 		Node* CalculatePath(Vector2I a, Vector2I b)
 		{
+			std::unordered_set<Node*> checked;
+			std::unordered_set<Node*> awaits;
+
 			Node* current = new Node();
 			current->pos = a;
 			current->g = 0;
@@ -43,10 +45,6 @@ namespace my
 			}
 		}
 
-		void Clear()
-		{
-
-		}
 
 		struct Node
 		{
