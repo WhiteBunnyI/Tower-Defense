@@ -34,6 +34,7 @@ void ClearList(std::list<T> lst)
 		if(p != nullptr)
 			delete p;
 	}
+	lst.clear();
 }
 
 Engine::~Engine()
@@ -92,7 +93,12 @@ void Engine::CrankUp()
 			{
 				if ((*iterCoroutine)->Tick(deltaTime))
 				{
+					(*iterCoroutine)->m_isStarted = false;
+					if ((*iterCoroutine)->m_deleteAfterUse)
+						delete (*iterCoroutine);
+
 					iterCoroutine = m_coroutines.erase(iterCoroutine);
+
 					if (iterCoroutine == m_coroutines.end())
 						break;
 					if (iterCoroutine != m_coroutines.begin())

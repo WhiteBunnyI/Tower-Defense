@@ -5,13 +5,15 @@
 class BaseCoroutine
 {
 protected:
+	bool m_deleteAfterUse;
 	bool m_isStarted;
 	float m_timer;
+	float m_specTimer;
 	friend class Engine;
 	virtual bool Tick(float deltaTime) = 0;
 
 public:
-	BaseCoroutine(float timer) : m_timer{ timer }, m_isStarted{ false } {}
+	BaseCoroutine(float timer, bool deleteAfterUse = true) : m_specTimer{ timer }, m_timer{ 0 }, m_isStarted { false }, m_deleteAfterUse{ deleteAfterUse } {}
 
 	virtual void Start() = 0;
 
@@ -35,7 +37,7 @@ class Coroutine : public BaseCoroutine
 	}
 
 public:
-	Coroutine(void (*func)(Coroutine&), float sec, Args... args) : BaseCoroutine(sec), m_data(args...), m_func{ func } { }
+	Coroutine(void (*func)(Coroutine&), float sec, Args... args, bool deleteAfterUse = true) : BaseCoroutine(sec, deleteAfterUse), m_data(args...), m_func{ func } { }
 
 	~Coroutine()
 	{
@@ -45,6 +47,7 @@ public:
 
 	void Start() override
 	{
+		m_timer = m_specTimer;
 		m_isStarted = true;
 		Engine::instance->m_coroutines.push_back(this);
 	}

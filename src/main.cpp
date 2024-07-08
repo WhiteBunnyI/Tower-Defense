@@ -3,6 +3,8 @@
 #include <Coroutine.hpp>
 #include <Mouse.hpp>
 #include <Singleton.hpp>
+#include <PathFinding.hpp>
+
 
 sf::Image NoiseToImage(my::Noise_Output& noise)
 {
@@ -22,10 +24,12 @@ sf::Image NoiseToImage(my::Noise_Output& noise)
 }
 
 
+
+
 int main()
 {
+	setlocale(LC_ALL, "rus");
 	std::srand(time(0));
-
 	Engine engine(800, 600);
 
 	Singleton singleton;

@@ -115,3 +115,19 @@ MapGenerator::~MapGenerator()
 	if (m_dataTemp != nullptr)
 		delete m_dataTemp;
 }
+
+const Tile& MapGenerator::getTile(int x, int y)
+{
+	return m_map[x + y * m_size.x];
+}
+
+const Vector2I& MapGenerator::getSize()
+{
+	return m_size;
+}
+
+sf::Vector2f& MapGenerator::translateCoordsToGridCoords(int x, int y)
+{
+	return sf::Vector2f(x * m_texturesSize + m_texturesSize / 2, y * m_texturesSize + m_texturesSize / 2);
+}
+

@@ -25,6 +25,9 @@ public:
 
 	my::Noise_Output& getDataTemp() { return *m_dataTemp; }
 
+	const Tile& getTile(int x, int y);
+	const Vector2I& getSize();
+	sf::Vector2f& translateCoordsToGridCoords(int x, int y);
 };
 
 #include <Engine.hpp>

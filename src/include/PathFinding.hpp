@@ -1,50 +1,15 @@
 #pragma once
 
 #include <Vector2.hpp>
+#include <MapGenerator.hpp>
+#include <Singleton.hpp>
 #include <unordered_set>
-#include <list>
 
 namespace my
 {
-	class PathFinding
+	namespace pathFinding
 	{
-		class Node;
-
-	public:
-		PathFinding() = default;
-
-		int distance(Vector2I a, Vector2I b)
-		{
-			int x = b.x - a.x;
-			int y = b.y - a.y;
-			return std::sqrtf(x * x + y * y);
-		}
-
-		Node* CalculatePath(Vector2I a, Vector2I b)
-		{
-			std::unordered_set<Node*> checked;
-			std::unordered_set<Node*> awaits;
-
-			Node* current = new Node();
-			current->pos = a;
-			current->g = 0;
-			current->h = distance(a, b);
-			current->parent = nullptr;
-			current->calculate();
-			checked.insert(current);
-
-			while (current->pos != b)
-			{
-				for (int y = -1; y < 2; ++y)
-				{
-					for (int x = -1; x < 2; ++x)
-					{
-						
-					}
-				}
-			}
-		}
-
+		//Объявляем свои функцию, по которой будет считаться хэш и сравниваться указатели на Node
 
 		struct Node
 		{
@@ -54,19 +19,39 @@ namespace my
 			int f;			//Сумма g+h
 			Node* parent;	//Родительский узел
 
-			void calculate()
-			{
-				f = g + h;
-			}
+			void calculate();
 
-			bool operator >(Node& other)
-			{
-				return (f > other.f);
-			}
-			bool operator==(Node& other)
-			{
-				return ((pos.x == other.pos.x) && (pos.y == other.pos.y));
-			}
+			bool operator >(const Node& other) const;
+			bool operator==(const Node& other) const;
 		};
-	};
+
+		struct NodePtrHash
+		{
+			size_t operator()(const my::pathFinding::Node* f) const;
+		};
+
+		struct NodePtrEqual
+		{
+			bool operator()(const my::pathFinding::Node* lhs, const my::pathFinding::Node* rhs) const;
+		};
+
+		class PathFinding
+		{
+			std::unordered_set<Node*, NodePtrHash, NodePtrEqual> checked;
+			std::unordered_set<Node*, NodePtrHash, NodePtrEqual> awaits;
+
+			int distance(Vector2I a, Vector2I b);
+
+		public:
+			PathFinding() = default;
+
+			void Clear();
+
+			~PathFinding();
+
+			Node* CalculatePath(Vector2I a, Vector2I b);
+
+
+		};
+	}
 }
