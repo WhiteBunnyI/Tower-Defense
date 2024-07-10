@@ -77,6 +77,7 @@ void Engine::CrankUp()
 				((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape)))
 			{
 				m_window->close();
+				isPlaying = false;
 				break;
 			}
 
@@ -118,28 +119,28 @@ void Engine::CrankUp()
 			{
 				(*iter)->Update();
 			}
+			m_window->clear();
+
+			//Render Invoke
+			if (!m_render.empty())
+			{
+				for (auto iter = m_render.begin(); iter != m_render.end(); ++iter)
+				{
+					auto p = (*iter)->render;
+					if(p != nullptr)
+						m_window->draw(*p);
+				}
+
+				for (auto iter = m_manualRender.begin(); iter != m_manualRender.end(); ++iter)
+				{
+					auto p = (*iter);
+					if (p != nullptr)
+						m_window->draw(*p);
+				}
+			}
+			m_window->display();
 		}
 
-		m_window->clear();
-
-		//Render Invoke
-		if (!m_render.empty())
-		{
-			for (auto iter = m_render.begin(); iter != m_render.end(); ++iter)
-			{
-				auto p = (*iter)->render;
-				if(p != nullptr)
-					m_window->draw(*p);
-			}
-
-			for (auto iter = m_manualRender.begin(); iter != m_manualRender.end(); ++iter)
-			{
-				auto p = (*iter);
-				if (p != nullptr)
-					m_window->draw(*p);
-			}
-		}
-		m_window->display();
 
 
 	}

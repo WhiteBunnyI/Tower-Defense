@@ -31,12 +31,12 @@ int main()
 	Engine engine(800, 600);
 
 	Singleton singleton;
-	MapGenerator* map = new MapGenerator(Vector2I(200, 200));
-	singleton.map = map;
+	MapGenerator map(Vector2I(200, 200));
+	singleton.map = &map;
 
-	sf::Image height(NoiseToImage(map->getDataHeight()));
-	sf::Image temp(NoiseToImage(map->getDataTemp()));
-	sf::Image deposits(NoiseToImage(map->getDataDeposit()));
+	sf::Image height(NoiseToImage(map.getDataHeight()));
+	sf::Image temp(NoiseToImage(map.getDataTemp()));
+	sf::Image deposits(NoiseToImage(map.getDataDeposit()));
 	height.saveToFile("./HeightMap.png");
 	temp.saveToFile("./TempMap.png");
 	deposits.saveToFile("./DepositMap.png");
