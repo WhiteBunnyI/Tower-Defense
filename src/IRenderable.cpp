@@ -5,6 +5,8 @@ IRenderable::IRenderable(sf::Texture* t) : render{nullptr}
 {
 	if (t != nullptr)
 		render = new sf::Sprite(*t);
+	else
+		render = new sf::Sprite();
 	Engine::instance->m_render.push_back(this);
 }
 

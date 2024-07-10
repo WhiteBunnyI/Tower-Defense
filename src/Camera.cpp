@@ -1,9 +1,17 @@
 #include <Camera.hpp>
 
+Camera::Camera(float speed, float sprintMultiple) : IUpdateable(), speed{ speed }, sprintMul{ sprintMultiple } {}
+
+void Camera::SetPosition(sf::Vector2f pos)
+{
+	auto view = Engine::instance->m_view;
+	view->setCenter(pos);
+	Engine::instance->UpdateView();
+}
+
 void Camera::Update()
 {
 	auto view = Engine::instance->m_view;
-	auto window = Engine::instance->m_window;
 
 	Vector2 vec(0, 0);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
@@ -20,5 +28,5 @@ void Camera::Update()
 	vec *= Engine::instance->deltaTime;
 
 	view->move(vec.x, vec.y);
-	window->setView(*view);
+	Engine::instance->UpdateView();
 }

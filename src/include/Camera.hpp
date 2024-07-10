@@ -8,11 +8,9 @@ public:
 	float speed;
 	float sprintMul;
 
-	Camera(float speed, float sprintMultiple) : IUpdateable(), speed{ speed }, sprintMul{ sprintMultiple }
-	{
-
-	}
+	Camera(float speed, float sprintMultiple);
 
 	void Update() override;
 
+	void SetPosition(sf::Vector2f pos);
 };

@@ -4,7 +4,7 @@
 #include <Mouse.hpp>
 #include <Singleton.hpp>
 #include <PathFinding.hpp>
-
+#include <Player.hpp>
 
 sf::Image NoiseToImage(my::Noise_Output& noise)
 {
@@ -24,8 +24,6 @@ sf::Image NoiseToImage(my::Noise_Output& noise)
 }
 
 
-
-
 int main()
 {
 	setlocale(LC_ALL, "rus");
@@ -33,16 +31,18 @@ int main()
 	Engine engine(800, 600);
 
 	Singleton singleton;
-	MapGenerator map(Vector2I(200, 200));
-	singleton.map = &map;
+	MapGenerator* map = new MapGenerator(Vector2I(200, 200));
+	singleton.map = map;
 
-	sf::Image height(NoiseToImage(map.getDataHeight()));
-	sf::Image temp(NoiseToImage(map.getDataTemp()));
+	sf::Image height(NoiseToImage(map->getDataHeight()));
+	sf::Image temp(NoiseToImage(map->getDataTemp()));
+	sf::Image deposits(NoiseToImage(map->getDataDeposit()));
 	height.saveToFile("./HeightMap.png");
 	temp.saveToFile("./TempMap.png");
+	deposits.saveToFile("./DepositMap.png");
 
-	Camera camera(240, 2);
 	Mouse mouse;
+	Player player;
 
 	engine.CrankUp();
 

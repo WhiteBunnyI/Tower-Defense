@@ -1,6 +1,9 @@
 #pragma once
 
-#include <Engine.hpp>
+#include <IUpdateable.hpp>
+#include <IStartable.hpp>
+#include <IRenderable.hpp>
+#include <Vector2.hpp>
 
 class GameObject : public IUpdateable, public IStartable, public IRenderable
 {
@@ -29,3 +32,4 @@ public:
 
 };
 
+#include <Engine.hpp>

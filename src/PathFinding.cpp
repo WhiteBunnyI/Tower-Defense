@@ -24,31 +24,26 @@ bool my::pathFinding::Node::operator==(const Node& other) const
 }
 
 
-int my::pathFinding::PathFinding::distance(Vector2I a, Vector2I b)
+float my::pathFinding::PathFinding::distance(Vector2I a, Vector2I b)
 {
-	int x = b.x - a.x;
-	int y = b.y - a.y;
+	float x = b.x - a.x;
+	float y = b.y - a.y;
 	return std::sqrtf(x * x + y * y);
 }
 
 void my::pathFinding::PathFinding::Clear()
 {
-	for (auto iter = checked.begin(); iter != checked.end();)
+	for (auto iter = checked.begin(); iter != checked.end(); ++iter)
 	{
 		delete (*iter);
 	}
 	checked.clear();
-	//Исправить алгоритм: остаеться 1 элемент не удаленным!!! Также исправить и в других реализациях!!!
+
 	for (auto iter = awaits.begin(); iter != awaits.end(); ++iter)
 	{
 		delete (*iter);
-		iter = awaits.erase(iter);
-
-		if (iter == awaits.end())
-			break;
-		if (iter != awaits.begin())
-			--iter;
 	}
+	awaits.clear();
 }
 
 my::pathFinding::PathFinding::~PathFinding()
@@ -97,13 +92,13 @@ my::pathFinding::Node* my::pathFinding::PathFinding::CalculatePath(Vector2I a, V
 
 #pragma warning (disable: 4533)
 				//Игнорим объекты, по которым нельзя ходить
-				Tile tile = map->getTile(_x, _y);
+				Tile::Type tile = map->getTile(_x, _y);
 #pragma warning (default: 4533)
-				float speed = Tile::MoveSpeed(tile.type);
+				float speed = Tile::MoveSpeed(tile);
 				if (speed == 0)
 					continue;
 
-				node->g = (current->g + distance(current->pos, node->pos)) * (2 - speed);
+				node->g = current->g + distance(current->pos, node->pos) * 10.f * (2.f - speed);
 				node->h = distance(node->pos, b);
 				node->parent = current;
 				node->calculate();

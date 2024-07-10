@@ -15,20 +15,24 @@
 #include <Coroutine.hpp>
 #include <MapGenerator.hpp>
 #include <EventHolder.hpp>
+#include <ThreadPool.hpp>
 
 class Engine
 {
 	bool isPlaying = false;
 public:
+	static inline Engine* instance{nullptr};
 	float deltaTime;
 	int m_gameWidth; 
 	int m_gameHeight;
+
+	my::ThreadPool threadPool;
+
 	sf::View* m_view;
 	sf::RenderWindow* m_window;
-	static inline Engine* instance{nullptr};
 
-	std::list<IUpdateable*> m_update;
 	std::list<IStartable*> m_start;
+	std::list<IUpdateable*> m_update;
 	std::list<IRenderable*> m_render;
 	std::list<sf::Drawable*> m_manualRender;
 
@@ -36,9 +40,9 @@ public:
 	std::list<BaseEventHolder*> m_events;
 
 	Engine(int gameWidth, int gameHeight);
-	~Engine();
 	Engine(const Engine& engine) = delete;
 	Engine& operator=(const Engine& other) = delete;
+	~Engine();
 
 	void CrankUp();
 

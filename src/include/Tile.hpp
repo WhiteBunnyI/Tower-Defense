@@ -5,7 +5,7 @@
 struct Tile
 {
 
-	enum Type : char
+	enum class Type
 	{
 		water,
 		soil,
@@ -16,12 +16,6 @@ struct Tile
 		rocky_surface,
 		snow,
 	};
-
-	Type type;
-
-	Tile();
-
-	Tile(Type _type);
 
 	static float MoveSpeed(Type type);
 

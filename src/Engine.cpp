@@ -1,6 +1,13 @@
 #include <Engine.hpp>
 
-Engine::Engine(int gameWidth, int gameHeight) : m_gameHeight{ gameHeight }, m_gameWidth{ gameWidth }, m_view{nullptr}, m_window{nullptr}, deltaTime{0}
+Engine::Engine(int gameWidth, int gameHeight) : 
+	m_gameHeight{ gameHeight }, 
+	m_gameWidth{ gameWidth }, 
+	m_view{ new sf::View(sf::Vector2f(m_gameWidth / 2.f, m_gameHeight / 2.f), sf::Vector2f(m_gameWidth, m_gameHeight)) },
+	m_window{ new sf::RenderWindow(sf::VideoMode(static_cast<unsigned int>(m_gameWidth), static_cast<unsigned int>(m_gameHeight), 32), "Tower Defense",
+		sf::Style::Titlebar | sf::Style::Close) },
+	deltaTime{0},
+	threadPool{8}
 {
 	if (Engine::instance != nullptr)
 	{
@@ -8,10 +15,7 @@ Engine::Engine(int gameWidth, int gameHeight) : m_gameHeight{ gameHeight }, m_ga
 		throw new std::runtime_error("Trying create a new engine!");
 	}
 	Engine::instance = this;
-	m_window = new sf::RenderWindow(sf::VideoMode(static_cast<unsigned int>(m_gameWidth), static_cast<unsigned int>(m_gameHeight), 32), "Tower Defense",
-		sf::Style::Titlebar | sf::Style::Close);
 	m_window->setVerticalSyncEnabled(true);
-	m_view = new sf::View(sf::Vector2f(m_gameWidth / 2.f, m_gameHeight / 2.f), sf::Vector2f(m_gameWidth, m_gameHeight));
 	m_window->setView(*m_view);
 }
 
@@ -91,6 +95,7 @@ void Engine::CrankUp()
 			//Coroutines Invoke
 			for (auto iterCoroutine = m_coroutines.begin(); iterCoroutine != m_coroutines.end(); ++iterCoroutine)
 			{
+				START:
 				if ((*iterCoroutine)->Tick(deltaTime))
 				{
 					(*iterCoroutine)->m_isStarted = false;
@@ -101,8 +106,9 @@ void Engine::CrankUp()
 
 					if (iterCoroutine == m_coroutines.end())
 						break;
-					if (iterCoroutine != m_coroutines.begin())
-						--iterCoroutine;
+					if (iterCoroutine == m_coroutines.begin())
+						goto START;
+					--iterCoroutine;
 				}
 
 			}

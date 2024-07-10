@@ -40,7 +40,7 @@ namespace my
 			std::unordered_set<Node*, NodePtrHash, NodePtrEqual> checked;
 			std::unordered_set<Node*, NodePtrHash, NodePtrEqual> awaits;
 
-			int distance(Vector2I a, Vector2I b);
+			float distance(Vector2I a, Vector2I b);
 
 		public:
 			PathFinding() = default;

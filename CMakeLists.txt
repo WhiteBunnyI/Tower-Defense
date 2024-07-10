@@ -11,7 +11,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 include_directories("src/include/")
-include_directories("include/")		#Добавляем хедеры
+include_directories("include/")			#Добавляем хедеры
 link_directories("lib/")			#Добавляем путь где находятся библиотеки
 
 file(GLOB PROJECTSOURCES "src/*.cpp" "src/include/*.hpp")	#Ищем все cpp hpp файлы

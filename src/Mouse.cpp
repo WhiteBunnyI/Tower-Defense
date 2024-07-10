@@ -34,7 +34,7 @@ void DrawPath(Node* n)
 	}
 }
 
-Mouse::Mouse() : IUpdateable(), timer{ true }, window{ Engine::instance->m_window }
+Mouse::Mouse() : IUpdateable(), timer{ true }, window{ Engine::instance->m_window }, a{ 0,0 }, b{ 0,0 }
 {
 	cor = new Coroutine<Mouse*>(func, .15f, this, false);
 }
@@ -48,12 +48,14 @@ void Mouse::Update()
 		sf::Vector2f mousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
 		int size = Singleton::instance->map->m_texturesSize;
 		a = Vector2I(mousePos.x / size, mousePos.y / size);
+#ifdef DEBUG_PATHFINDING
 		std::cout << "Coords: " << a.x << ", " << a.y << std::endl;
 		sf::CircleShape* shape = new sf::CircleShape(5.f);
 		shape->setPosition(a.x * size + size / 2, a.y * size + size / 2);
 		shape->setOrigin(5, 5);
 		shape->setFillColor(sf::Color::Blue);
 		Engine::instance->m_manualRender.push_back(shape);
+#endif // DEBUG_PATHFINDING
 		
 		cor->Start();
 	}
@@ -65,12 +67,14 @@ void Mouse::Update()
 		sf::Vector2f mousePos = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
 		int size = Singleton::instance->map->m_texturesSize;
 		b = Vector2I(mousePos.x / size, mousePos.y / size);
+#ifdef DEBUG_PATHFINDING
 		std::cout << "Coords: " << b.x << ", " << b.y << std::endl;
 		sf::CircleShape* shape = new sf::CircleShape(5.f);
 		shape->setPosition(b.x * size + size / 2, b.y * size + size / 2);
 		shape->setOrigin(5, 5);
 		shape->setFillColor(sf::Color::Red);
 		Engine::instance->m_manualRender.push_back(shape);
+#endif // DEBUG_PATHFINDING
 
 		cor->Start();
 	}
@@ -81,12 +85,14 @@ void Mouse::Update()
 		std::cout << "Просчитываем путь..." << std::endl;
 		Node* p = finder.CalculatePath(a, b);
 		std::cout << "Путь был успешно просчитан!" << std::endl;
-
+#ifdef DEBUG_PATHFINDING
 		if(p != nullptr)
 		{
-			std::cout << "Путь оказался найден!" << std::endl;
+			std::cout << "Рисуем путь..." << std::endl;
 			DrawPath(p);
 		}
+#endif // DEBUG_PATHFINDING
+
 		cor->Start();
 	}
 

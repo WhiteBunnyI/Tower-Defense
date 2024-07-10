@@ -1,13 +1,15 @@
 #pragma once
 
 #include <MapGenerator.hpp>
+#include <Player.hpp>
 
 struct Singleton
 {
 	static inline Singleton* instance{ nullptr };
 	MapGenerator* map;
+	Player* player;
 
-	Singleton() : map{nullptr}
+	Singleton() : map{nullptr}, player{nullptr}
 	{
 		if (instance != nullptr)
 		{

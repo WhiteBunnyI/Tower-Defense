@@ -3,6 +3,8 @@
 #include <Coroutine.hpp>
 #include <PathFinding.hpp>
 
+#define DEBUG_PATHFINDING
+
 class Mouse : IUpdateable
 {
 	Coroutine<Mouse*>* cor;

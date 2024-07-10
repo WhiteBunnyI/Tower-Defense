@@ -1,17 +1,20 @@
 #pragma once
 
+#include <Vector2.hpp>
 #include <Tile.hpp>
 #include <Noise.hpp>
-#include <Vector2.hpp>
+#include <GameObject.hpp>
 
 class MapGenerator
 {
 	int m_seed;
 	my::Noise_Output* m_dataHeight;
 	my::Noise_Output* m_dataTemp;
+	my::Noise_Output* m_dataDeposit;
 	Vector2I m_size;
-	Tile* m_map;
-	sf::Sprite m_mapObject;
+	std::vector<Tile::Type> m_ground;
+	GameObject* m_objects;
+	GameObject* m_groundObject;
 
 public:
 	const int m_texturesSize = 16;
@@ -22,12 +25,12 @@ public:
 	~MapGenerator();
 
 	my::Noise_Output& getDataHeight() { return *m_dataHeight; }
-
 	my::Noise_Output& getDataTemp() { return *m_dataTemp; }
+	my::Noise_Output& getDataDeposit() { return *m_dataDeposit; }
 
-	const Tile& getTile(int x, int y);
+	const Tile::Type& getTile(int x, int y);
 	const Vector2I& getSize();
-	sf::Vector2f& translateCoordsToGridCoords(int x, int y);
-};
+	sf::Vector2f translateCoordsToGridCoords(int x, int y);
 
-#include <Engine.hpp>
+	sf::Vector2f getPlayerCoordsSpawn();
+};
