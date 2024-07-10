@@ -12,8 +12,8 @@ class MapGenerator
 	my::Noise_Output* m_dataTemp;
 	my::Noise_Output* m_dataDeposit;
 	Vector2I m_size;
-	std::vector<Tile::Type> m_ground;
-	GameObject* m_objects;
+	std::vector<Tile*> m_ground;
+	std::list<GameObject> m_objects;
 	GameObject* m_groundObject;
 
 public:
@@ -28,9 +28,12 @@ public:
 	my::Noise_Output& getDataTemp() { return *m_dataTemp; }
 	my::Noise_Output& getDataDeposit() { return *m_dataDeposit; }
 
-	const Tile::Type& getTile(int x, int y);
+	Tile* const getTile(int x, int y);
+	Tile* const getTile(sf::Vector2i pos);
 	const Vector2I& getSize();
-	sf::Vector2f translateCoordsToGridCoords(int x, int y);
+	sf::Vector2f GridCoordsToCenterCoords(int x, int y);
+	sf::Vector2f GridCoordsToCoords(int x, int y);
+	sf::Vector2f CoordsToGridCoords(sf::Vector2f pos);
 
 	sf::Vector2f getPlayerCoordsSpawn();
 };

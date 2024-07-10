@@ -7,7 +7,7 @@ Engine::Engine(int gameWidth, int gameHeight) :
 	m_window{ new sf::RenderWindow(sf::VideoMode(static_cast<unsigned int>(m_gameWidth), static_cast<unsigned int>(m_gameHeight), 32), "Tower Defense",
 		sf::Style::Titlebar | sf::Style::Close) },
 	deltaTime{0},
-	threadPool{8}
+	threadPool{4}
 {
 	if (Engine::instance != nullptr)
 	{
@@ -29,18 +29,6 @@ void Engine::UpdateView()
 	m_window->setView(*m_view);
 }
 
-template<typename T>
-void ClearList(std::list<T> lst)
-{
-	for (auto iter = lst.begin(); iter != lst.end(); ++iter)
-	{
-		auto p = (*iter);
-		if(p != nullptr)
-			delete p;
-	}
-	lst.clear();
-}
-
 Engine::~Engine()
 {
 	delete m_view;
@@ -51,6 +39,7 @@ Engine::~Engine()
 	ClearList(m_start);
 	ClearList(m_manualRender);
 	ClearList(m_render);
+	ClearList(m_textures);
 }
 
 

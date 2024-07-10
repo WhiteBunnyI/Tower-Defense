@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <utility>
 
 struct Vector2
 {
@@ -71,12 +72,14 @@ struct Vector2
 		return *this;
 	}
 
-	Vector2& Normalize()
+	Vector2 Normalize()
 	{
+		if (x == 0 && y == 0)
+			return Vector2(0, 0);
 		float len = std::sqrt(x * x + y * y);
-		x /= len;
-		y /= len;
-		return *this;
+		Vector2 temp(*this);
+		temp /= len;
+		return temp;
 	}
 
 	static float Dot(Vector2 a, Vector2 b)

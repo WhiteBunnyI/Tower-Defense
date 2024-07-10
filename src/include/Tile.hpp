@@ -4,8 +4,7 @@
 
 struct Tile
 {
-
-	enum class Type
+	enum class Type : char
 	{
 		water,
 		soil,
@@ -17,7 +16,15 @@ struct Tile
 		snow,
 	};
 
+	Type type;
+	float speed;
+
+	Tile(Type type);
+
 	static float MoveSpeed(Type type);
 
 	static sf::Image* Image(Type type);
+	friend class MapGenerator;
+private:
+	void resetSpeed();
 };

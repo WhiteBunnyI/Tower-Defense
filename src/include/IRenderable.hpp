@@ -5,7 +5,7 @@
 struct IRenderable
 {
 	sf::Sprite* render;
-	IRenderable(sf::Texture* t);
+	IRenderable(sf::Texture* t = nullptr, bool addTextureToList = false);
 
 	virtual ~IRenderable();
 

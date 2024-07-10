@@ -1,13 +1,15 @@
 #include <Engine.hpp>
 #include <SFML/Graphics.hpp>
 
-IRenderable::IRenderable(sf::Texture* t) : render{nullptr}
+IRenderable::IRenderable(sf::Texture* t, bool addTextureToList) : render{nullptr}
 {
 	if (t != nullptr)
 		render = new sf::Sprite(*t);
 	else
 		render = new sf::Sprite();
 	Engine::instance->m_render.push_back(this);
+	if (addTextureToList)
+		Engine::instance->m_textures.push_back(t);
 }
 
 IRenderable::~IRenderable()
@@ -19,8 +21,6 @@ void IRenderable::Clear()
 {
 	if (render != nullptr)
 	{
-		if (render->getTexture() != nullptr)
-			delete render->getTexture();
 		delete render;
 	}
 	Engine::instance->m_render.remove(this);

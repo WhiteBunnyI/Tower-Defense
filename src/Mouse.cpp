@@ -19,7 +19,7 @@ void DrawLine(Vector2I a, Vector2I b)
 	line->setSize(sf::Vector2f(dist, map->m_texturesSize / 4));
 	line->setFillColor(sf::Color::Black);
 	line->setOrigin(0, map->m_texturesSize / 8);
-	line->setPosition((map->translateCoordsToGridCoords(a.x, a.y)));
+	line->setPosition((map->GridCoordsToCenterCoords(a.x, a.y)));
 	float angle = std::atan2(dy, dx) * (180.f/3.14f);
 	line->rotate(angle);
 	Engine::instance->m_manualRender.push_back(line);

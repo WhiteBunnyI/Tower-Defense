@@ -1,10 +1,10 @@
 #include <GameObject.hpp>
-	
-GameObject::GameObject() : IUpdateable(), IStartable(), IRenderable(nullptr) { }
 
-GameObject::GameObject(Vector2 position, sf::Texture* texture) : IUpdateable(), IStartable(), IRenderable(texture)
+GameObject::GameObject() : IUpdateable(), IStartable(), IRenderable() { }
+
+GameObject::GameObject(sf::Vector2f position, sf::Texture* texture, bool addTextureToList) : IUpdateable(), IStartable(), IRenderable(texture, addTextureToList)
 {
-	render->setPosition(position.x, position.y);
+	render->setPosition(position);
 }
 
 void GameObject::SetScale(Vector2& scale)

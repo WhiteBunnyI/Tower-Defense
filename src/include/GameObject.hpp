@@ -13,7 +13,7 @@ public:
 	
 	GameObject();
 
-	GameObject(Vector2 position, sf::Texture* texture);
+	GameObject(sf::Vector2f position, sf::Texture* texture, bool addTextureToList = false);
 
 	GameObject(const GameObject& other) = delete;
 

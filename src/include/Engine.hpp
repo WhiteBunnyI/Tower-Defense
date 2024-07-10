@@ -38,11 +38,23 @@ public:
 
 	std::list<BaseCoroutine*> m_coroutines;
 	std::list<BaseEventHolder*> m_events;
+	std::list<sf::Texture*> m_textures;
 
 	Engine(int gameWidth, int gameHeight);
 	Engine(const Engine& engine) = delete;
 	Engine& operator=(const Engine& other) = delete;
 	~Engine();
+
+	template<typename T>
+	static void ClearList(std::list<T> lst)
+	{
+		for (auto iter = lst.begin(); iter != lst.end(); ++iter)
+		{
+			if ((*iter) != nullptr)
+				delete (*iter);
+		}
+		lst.clear();
+	}
 
 	void CrankUp();
 

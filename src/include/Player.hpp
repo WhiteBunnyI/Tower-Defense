@@ -5,9 +5,11 @@
 
 class Player : public GameObject
 {
+	float speed;
+	float sprintMultiple;
 	Camera m_camera;
 public:
-	Player();
+	Player(float speed, float sprintMultiple);
 	Player(const Player& other) = delete;
 	Player& operator=(const Player& other) = delete;
 	~Player() override = default;

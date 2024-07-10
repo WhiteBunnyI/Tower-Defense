@@ -90,15 +90,12 @@ my::pathFinding::Node* my::pathFinding::PathFinding::CalculatePath(Vector2I a, V
 				if (checked.find(node) != checked.end())
 					continue;
 
-#pragma warning (disable: 4533)
 				//Игнорим объекты, по которым нельзя ходить
-				Tile::Type tile = map->getTile(_x, _y);
-#pragma warning (default: 4533)
-				float speed = Tile::MoveSpeed(tile);
-				if (speed == 0)
+				Tile* tile = map->getTile(_x, _y);
+				if (tile->speed == 0)
 					continue;
 
-				node->g = current->g + distance(current->pos, node->pos) * 10.f * (2.f - speed);
+				node->g = current->g + distance(current->pos, node->pos) * 10.f * (2.f - tile->speed);
 				node->h = distance(node->pos, b);
 				node->parent = current;
 				node->calculate();

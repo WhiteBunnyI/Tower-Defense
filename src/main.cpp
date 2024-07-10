@@ -42,7 +42,7 @@ int main()
 	deposits.saveToFile("./DepositMap.png");
 
 	Mouse mouse;
-	Player player;
+	Player player(120, 2);
 
 	engine.CrankUp();
 

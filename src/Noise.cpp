@@ -51,7 +51,7 @@ my::Noise_Output* my::Perlin_Noise::GetNoise(int seed, Vector2I gridSize, Vector
 			float r_y = (std::rand() % 10000 - 5000) / 10000.f;
 
 			Vector2 vec(r_x, r_y);
-			vec.Normalize();
+			vec = vec.Normalize();
 
 			r_vectors[current] = vec;
 		}

@@ -1,5 +1,13 @@
 #include <Tile.hpp>
 
+Tile::Tile(Type type) : type{ type }, speed{ MoveSpeed(type) } {}
+
+void Tile::resetSpeed()
+{
+	speed = MoveSpeed(type);
+}
+
+
 float Tile::MoveSpeed(Type type)
 {
 	switch (type)
