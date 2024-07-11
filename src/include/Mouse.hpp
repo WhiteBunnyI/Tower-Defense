@@ -1,22 +1,24 @@
 #pragma once
 
-#include <Coroutine.hpp>
-#include <PathFinding.hpp>
+#include <IUpdateable.hpp>
 
-#define DEBUG_PATHFINDING
+//#define DEBUG_PATHFINDING
 
 class Mouse : IUpdateable
 {
-	Coroutine<Mouse*>* cor;
-	sf::RenderWindow* window;
-	
-	Vector2I a;
-	Vector2I b;
+	//sf::RenderWindow* window;
+	//Input* input;
+	//
+	//Vector2I a;
+	//Vector2I b;
+	//
+	//my::pathFinding::PathFinding finder;
+	//std::future<my::pathFinding::Node*> result;
+	//bool isCalculatePath;
 
-	my::pathFinding::PathFinding finder;
+	Input* input;
 
 public:
-	bool timer;
 
 	Mouse();
 

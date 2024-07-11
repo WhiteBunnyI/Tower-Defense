@@ -41,7 +41,6 @@ int main()
 	temp.saveToFile("./TempMap.png");
 	deposits.saveToFile("./DepositMap.png");
 
-	Mouse mouse;
 	Player player(120, 2);
 
 	engine.CrankUp();

@@ -1,5 +1,6 @@
 #include <Player.hpp>
 #include <Singleton.hpp>
+#include <cmath>
 
 Player::Player(float speed, float sprintMultiple) : GameObject(), speed{ speed }, sprintMultiple{ sprintMultiple }
 {
@@ -13,6 +14,11 @@ Player::Player(float speed, float sprintMultiple) : GameObject(), speed{ speed }
 	render->setPosition(pos);
 }
 
+void Player::Attack()
+{
+
+}
+
 void Player::Start()
 {
 
@@ -21,17 +27,17 @@ void Player::Start()
 void Player::Update()
 {
 	auto map = Singleton::instance->map;
-
+	auto input = Engine::instance->m_input;
 	sf::Vector2f vec(0, 0);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	if (input->isHold(sf::Keyboard::S))
 		vec.y += speed;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	if (input->isHold(sf::Keyboard::W))
 		vec.y -= speed;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	if (input->isHold(sf::Keyboard::A))
 		vec.x -= speed;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	if (input->isHold(sf::Keyboard::D))
 		vec.x += speed;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+	if (input->isHold(sf::Keyboard::LShift))
 		vec *= sprintMultiple;
 
 	vec *= Engine::instance->deltaTime;
@@ -55,12 +61,13 @@ void Player::Update()
 	else if (vec.y < 0)
 		targetGridCoordsY.y -= 0.5f;
 
+
 	float tileSpeed = map->getTile(currentGridCoords.x, currentGridCoords.y)->speed;
 	
-	Tile* targetTileX = map->getTile(sf::Vector2i(targetGridCoordsX.x, targetGridCoordsX.y));
-	Tile* targetTileY = map->getTile(sf::Vector2i(targetGridCoordsY.x, targetGridCoordsY.y));
+	Tile* targetTileX = map->getTile(sf::Vector2i(std::floor(targetGridCoordsX.x), std::floor(targetGridCoordsX.y)));
+	Tile* targetTileY = map->getTile(sf::Vector2i(std::floor(targetGridCoordsY.x), std::floor(targetGridCoordsY.y)));
 
-	std::cout << "Pos: " << (render->getPosition()).x << ", " << (render->getPosition()).y << " | roundPos: " << currentGridCoords.x << ", " << currentGridCoords.y << " | gridX: " << targetGridCoordsX.x << ", " << targetGridCoordsX.y << " | gridY: " << targetGridCoordsY.x << ", " << targetGridCoordsY.y << std::endl;
+	//std::cout << "Pos: " << (render->getPosition()).x << "," << (render->getPosition()).y << " | roundPos: " << currentGridCoords.x << "," << currentGridCoords.y << " | gridX: " << targetGridCoordsX.x << "," << targetGridCoordsX.y << " | roundGridX: " << std::floor(targetGridCoordsX.x) << "," << std::floor(targetGridCoordsX.y) << " | gridY: " << targetGridCoordsY.x << "," << targetGridCoordsY.y << " | roundGridY: " << std::floor(targetGridCoordsY.x) << "," << std::floor(targetGridCoordsY.y) << std::endl;
 
 	//nullptr == выход за границы, speed = 0 == низя тут ходить
 	if (targetTileX == nullptr || targetTileX->speed == 0)

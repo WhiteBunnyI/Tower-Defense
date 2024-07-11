@@ -19,6 +19,9 @@ namespace my
 			int f;			//Сумма g+h
 			Node* parent;	//Родительский узел
 
+			Node() = default;
+			Node(int x, int y);
+
 			void calculate();
 
 			bool operator >(const Node& other) const;

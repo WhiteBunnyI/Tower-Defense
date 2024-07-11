@@ -1,5 +1,11 @@
 #include <PathFinding.hpp>
 
+my::pathFinding::Node::Node(int x, int y) : Node()
+{
+	pos = Vector2I(x, y);
+}
+
+
 std::size_t my::pathFinding::NodePtrHash::operator()(const my::pathFinding::Node* f) const
 {
 	return (f->pos.x + static_cast<size_t>(f->pos.y) * Singleton::instance->map->getSize().x);
@@ -33,15 +39,15 @@ float my::pathFinding::PathFinding::distance(Vector2I a, Vector2I b)
 
 void my::pathFinding::PathFinding::Clear()
 {
-	for (auto iter = checked.begin(); iter != checked.end(); ++iter)
+	for (auto ptr : checked)
 	{
-		delete (*iter);
+		delete ptr;
 	}
 	checked.clear();
 
-	for (auto iter = awaits.begin(); iter != awaits.end(); ++iter)
+	for (auto ptr : awaits)
 	{
-		delete (*iter);
+		delete ptr;
 	}
 	awaits.clear();
 }
@@ -62,10 +68,10 @@ my::pathFinding::Node* my::pathFinding::PathFinding::CalculatePath(Vector2I a, V
 	current->h = distance(a, b);
 	current->parent = nullptr;
 	current->calculate();
-	checked.insert(current);
 
 	while (current->pos != b)
 	{
+		checked.insert(current);
 		for (int y = -1; y < 2; ++y)
 		{
 			for (int x = -1; x < 2; ++x)
@@ -83,18 +89,20 @@ my::pathFinding::Node* my::pathFinding::PathFinding::CalculatePath(Vector2I a, V
 				if (_y < 0 || _y >= map->getSize().y)
 					continue;
 
-				Node* node = new Node();
-				node->pos = Vector2I(_x, _y);
-
-				//Игнорим клетки, которые мы уже проверили
-				if (checked.find(node) != checked.end())
+				
+				Node n(_x, _y);
+				//Игнорим клетки, которые мы уже проверили или которые ожидают проверки
+				if (checked.find(&n) != checked.end() || awaits.find(&n) != awaits.end())
 					continue;
+					
 
 				//Игнорим объекты, по которым нельзя ходить
 				Tile* tile = map->getTile(_x, _y);
 				if (tile->speed == 0)
 					continue;
 
+				Node* node = new Node();
+				node->pos = Vector2I(_x, _y);
 				node->g = current->g + distance(current->pos, node->pos) * 10.f * (2.f - tile->speed);
 				node->h = distance(node->pos, b);
 				node->parent = current;
@@ -104,7 +112,6 @@ my::pathFinding::Node* my::pathFinding::PathFinding::CalculatePath(Vector2I a, V
 			}
 		}
 
-		checked.insert(current);
 
 		//Закончились клетки для проверки
 		if (awaits.size() == 0)
@@ -126,6 +133,7 @@ my::pathFinding::Node* my::pathFinding::PathFinding::CalculatePath(Vector2I a, V
 	if (current->pos == b)
 		return current;
 
+	Clear();
 	//Не нашли :(
 	return nullptr;
 }

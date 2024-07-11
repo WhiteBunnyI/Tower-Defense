@@ -17,6 +17,7 @@ Engine::Engine(int gameWidth, int gameHeight) :
 	Engine::instance = this;
 	m_window->setVerticalSyncEnabled(true);
 	m_window->setView(*m_view);
+	m_input = new Input();
 }
 
 bool Engine::IsPlaying()
@@ -33,6 +34,7 @@ Engine::~Engine()
 {
 	delete m_view;
 	delete m_window;
+	delete m_input;
 	ClearList(m_update);
 	ClearList(m_coroutines);
 	ClearList(m_events);
@@ -59,6 +61,7 @@ void Engine::CrankUp()
 	{
 		// Handle events
 		sf::Event event;
+		m_input->Reset();
 		while (m_window->pollEvent(event))
 		{
 			// Window closed or escape key pressed: exit
@@ -69,6 +72,8 @@ void Engine::CrankUp()
 				isPlaying = false;
 				break;
 			}
+
+			m_input->Check(event);
 
 			//Event Invoke
 			for (auto iter = m_events.begin(); iter != m_events.end(); ++iter)
@@ -108,6 +113,12 @@ void Engine::CrankUp()
 			{
 				(*iter)->Update();
 			}
+			//LateUpdate Invoke
+			for (auto iter = m_lateUpdate.begin(); iter != m_lateUpdate.end(); ++iter)
+			{
+				(*iter)->LateUpdate();
+			}
+
 			m_window->clear();
 
 			//Render Invoke

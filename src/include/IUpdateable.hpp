@@ -9,3 +9,9 @@ struct IUpdateable
 	virtual void Update() = 0;
 };
 
+struct ILateUpdateable
+{
+	ILateUpdateable();
+	virtual ~ILateUpdateable();
+	virtual void LateUpdate() = 0;
+};

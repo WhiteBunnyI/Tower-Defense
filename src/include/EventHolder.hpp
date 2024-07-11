@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 struct BaseEventHolder
 {
 	virtual void Call(sf::Event& event) = 0;
@@ -34,3 +32,4 @@ struct EventHolder : BaseEventHolder
 	}
 };
 
+#include <Engine.hpp>

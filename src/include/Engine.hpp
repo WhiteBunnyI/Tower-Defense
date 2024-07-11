@@ -7,6 +7,7 @@
 #include <iostream>
 #include <list>
 
+#include <Input.hpp>
 #include <Vector2.hpp>
 #include <IUpdateable.hpp>
 #include <IStartable.hpp>
@@ -27,12 +28,14 @@ public:
 	int m_gameHeight;
 
 	my::ThreadPool threadPool;
+	Input* m_input;
 
 	sf::View* m_view;
 	sf::RenderWindow* m_window;
 
 	std::list<IStartable*> m_start;
 	std::list<IUpdateable*> m_update;
+	std::list<ILateUpdateable*> m_lateUpdate;
 	std::list<IRenderable*> m_render;
 	std::list<sf::Drawable*> m_manualRender;
 
