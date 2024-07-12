@@ -1,17 +1,3 @@
-#include <Mouse.hpp>
-
-Mouse::Mouse() : IUpdateable(), input{ Engine::instance->m_input }
-{
-	
-}
-
-void Mouse::Update()
-{
-	if (input->isPressed(sf::Mouse::Left))
-	{
-
-	}
-}
 
 //using Node = my::pathFinding::Node;
 //

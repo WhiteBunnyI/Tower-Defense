@@ -13,11 +13,11 @@ public:
 	
 	GameObject();
 
-	GameObject(sf::Vector2f position, sf::Texture* texture, bool addTextureToList = false);
+	GameObject(const sf::Vector2f position, sf::Texture* texture, bool addTextureToRemoveList = false);
 
-	GameObject(const GameObject& other) = delete;
+	GameObject(const GameObject& other);
 
-	GameObject& operator=(const GameObject& other) = delete;
+	GameObject& operator=(const GameObject& other);
 
 	void Update() override {}
 	void Start() override {}

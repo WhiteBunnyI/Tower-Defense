@@ -2,7 +2,6 @@
 
 #include <map>
 #include <SFML/Graphics.hpp>
-#include <iostream>
 
 class Input
 {
@@ -15,121 +14,32 @@ private:
 	std::map<sf::Mouse::Button, bool> mousePressed;
 	std::map<sf::Mouse::Button, bool> mouseReleased;
 	std::map<sf::Mouse::Button, bool> mouseHold;
-
+	sf::Vector2f mousePos;
+	float mouseWheelDelta;
 
 public:
-	Input()
-	{
-		for (int key = sf::Keyboard::A; key != sf::Keyboard::KeyCount; ++key)
-		{
-			sf::Keyboard::Key k = static_cast<sf::Keyboard::Key>(key);
-			keyboardPressed[k] = false;
-			keyboardReleased[k] = true;
-			keyboardHold[k] = false;
-		}
-		for (int key = sf::Mouse::Left; key != sf::Mouse::ButtonCount; ++key)
-		{
-			sf::Mouse::Button b = static_cast<sf::Mouse::Button>(key);
-			mousePressed[b] = false;
-			mouseReleased[b] = true;
-			mouseHold[b] = false;
-		}
-	}
+	Input();
 	Input(const Input& other) = delete;
 	Input& operator=(const Input& other) = delete;
 
 
-	bool isPressed(sf::Keyboard::Key key)
-	{
-		return keyboardPressed[key];
-	}
-	bool isPressed(sf::Mouse::Button key)
-	{
-		return mousePressed[key];
-	}
+	bool isPressed(sf::Keyboard::Key key);
+	bool isPressed(sf::Mouse::Button key);
 
-	bool isReleased(sf::Keyboard::Key key)
-	{
-		return keyboardReleased[key];
-	}
-	bool isReleased(sf::Mouse::Button key)
-	{
-		return mouseReleased[key];
-	}
+	bool isReleased(sf::Keyboard::Key key);
+	bool isReleased(sf::Mouse::Button key);
 
-	bool isHold(sf::Keyboard::Key key)
-	{
-		return keyboardHold[key];
-	}
-	bool isHold(sf::Mouse::Button key)
-	{
-		return mouseHold[key];
-	}
+	bool isHold(sf::Keyboard::Key key);
+	bool isHold(sf::Mouse::Button key);
 
-	bool isHasFocus()
-	{
-		return Engine::instance->m_window->hasFocus();
-	}
+	bool isHasFocus();
 
-	sf::Vector2f getMousePos()
-	{
-		auto window = Engine::instance->m_window;
-		return window->mapPixelToCoords(sf::Mouse::getPosition(*window));
-	}
+	sf::Vector2f getMousePos();
+
 
 private:
-	void Check(sf::Event& e)
-	{
-
-		switch (e.type)
-		{
-
-		case sf::Event::KeyPressed:
-			if (keyboardReleased[e.key.code])
-			{
-				keyboardPressed[e.key.code] = true;
-				keyboardReleased[e.key.code] = false;
-				keyboardHold[e.key.code] = true;
-			}
-			break;
-		case sf::Event::KeyReleased:
-			keyboardPressed[e.key.code] = false;
-			keyboardReleased[e.key.code] = true;
-			keyboardHold[e.key.code] = false;
-			break;
-
-		case sf::Event::MouseButtonPressed:
-			if (mouseReleased[e.mouseButton.button])
-			{
-				mousePressed[e.mouseButton.button] = true;
-				mouseReleased[e.mouseButton.button] = false;
-				mouseHold[e.mouseButton.button] = true;
-			}
-			break;
-		case sf::Event::MouseButtonReleased:
-			mousePressed[e.mouseButton.button] = false;
-			mouseReleased[e.mouseButton.button] = true;
-			mouseHold[e.mouseButton.button] = false;
-			break;
-		default:
-			break;
-		}
-
-
-	}
-	void Reset()
-	{
-		for (int key = sf::Keyboard::A; key != sf::Keyboard::KeyCount; ++key)
-		{
-			sf::Keyboard::Key k = static_cast<sf::Keyboard::Key>(key);
-			keyboardPressed[k] = false;
-		}
-		for (int key = sf::Mouse::Left; key != sf::Mouse::ButtonCount; ++key)
-		{
-			sf::Mouse::Button b = static_cast<sf::Mouse::Button>(key);
-			mousePressed[b] = false;
-		}
-	}
+	void Reset();
+	void Check(sf::Event& e);
 };
 
 #include <Engine.hpp>

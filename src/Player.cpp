@@ -2,32 +2,49 @@
 #include <Singleton.hpp>
 #include <cmath>
 
-Player::Player(float speed, float sprintMultiple) : GameObject(), speed{ speed }, sprintMultiple{ sprintMultiple }
+Player::Player(float speed, float sprintMultiple) : GameObject(), speed{ speed }, sprintMultiple{ sprintMultiple }, input{ Engine::instance->m_input }
 {
 	sf::Vector2f pos = Singleton::instance->map->getPlayerCoordsSpawn();
-	pos = sf::Vector2f(5, 5);
 	m_camera.SetPosition(pos);
 	sf::Texture* texture = new sf::Texture();
-	texture->loadFromFile("./resources/player.png");
+	texture->loadFromFile("./resources/player/player.png");
 	render->setOrigin(Singleton::instance->map->m_texturesSize / 2.f, Singleton::instance->map->m_texturesSize / 2.f);
 	render->setTexture(*texture, true);
 	render->setPosition(pos);
-}
 
-void Player::Attack()
-{
-
+	sf::Texture* swordTexture = new sf::Texture();
+	swordTexture->loadFromFile("./resources/player/sword.png");
+	sword = GameObject(pos, swordTexture);
+	sword.render->setOrigin(Singleton::instance->map->m_texturesSize / 2.f, Singleton::instance->map->m_texturesSize);
 }
 
 void Player::Start()
 {
+	
 
 }
 
+
 void Player::Update()
 {
+	if (input->isHasFocus())
+	{
+		Move();
+		Attack();
+	}
+}
+
+void Player::Attack()
+{
+	if (input->isPressed(sf::Mouse::Left))
+	{
+
+	}
+}
+
+void Player::Move()
+{
 	auto map = Singleton::instance->map;
-	auto input = Engine::instance->m_input;
 	sf::Vector2f vec(0, 0);
 	if (input->isHold(sf::Keyboard::S))
 		vec.y += speed;
@@ -63,7 +80,7 @@ void Player::Update()
 
 
 	float tileSpeed = map->getTile(currentGridCoords.x, currentGridCoords.y)->speed;
-	
+
 	Tile* targetTileX = map->getTile(sf::Vector2i(std::floor(targetGridCoordsX.x), std::floor(targetGridCoordsX.y)));
 	Tile* targetTileY = map->getTile(sf::Vector2i(std::floor(targetGridCoordsY.x), std::floor(targetGridCoordsY.y)));
 

@@ -2,14 +2,18 @@
 
 #include <GameObject.hpp>
 #include <Camera.hpp>
-#include <Mouse.hpp>
+#include <Input.hpp>
 
 class Player : public GameObject
 {
 	float speed;
 	float sprintMultiple;
 	Camera m_camera;
-	Mouse mouse;
+	Input* input;
+	GameObject sword;
+	GameObject pickaxe;
+	GameObject axe;
+
 public:
 	Player(float speed, float sprintMultiple);
 	Player(const Player& other) = delete;
@@ -17,6 +21,7 @@ public:
 	~Player() override = default;
 
 	void Attack();
+	void Move();
 
 	void Update() override;
 	void Start() override;

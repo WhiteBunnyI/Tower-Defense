@@ -2,9 +2,23 @@
 
 GameObject::GameObject() : IUpdateable(), IStartable(), IRenderable() { }
 
-GameObject::GameObject(sf::Vector2f position, sf::Texture* texture, bool addTextureToList) : IUpdateable(), IStartable(), IRenderable(texture, addTextureToList)
+GameObject::GameObject(const sf::Vector2f position, sf::Texture* texture, bool addTextureToRemoveList) : IUpdateable(), IStartable(), IRenderable(texture, addTextureToRemoveList)
 {
 	render->setPosition(position);
+}
+
+GameObject::GameObject(const GameObject& other) : GameObject()
+{
+	render->setTexture(*other.render->getTexture());
+	render->setPosition(other.render->getPosition());
+}
+
+GameObject& GameObject::operator=(const GameObject& other)
+{
+	delete render;
+	render = new sf::Sprite(*other.render->getTexture());
+	render->setPosition(other.render->getPosition());
+	return *this;
 }
 
 void GameObject::SetScale(Vector2& scale)
