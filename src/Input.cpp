@@ -51,11 +51,21 @@ bool Input::isHasFocus()
 	return Engine::instance->m_window->hasFocus();
 }
 
-sf::Vector2f Input::getMousePos()
+sf::Vector2f Input::getMousePosInWindow()
 {
 	/*auto window = Engine::instance->m_window;
 	return window->mapPixelToCoords(sf::Mouse::getPosition(*window));*/
-	return mousePos;
+	return mousePosInWindow;
+}
+
+sf::Vector2f Input::getMousePosInWorld()
+{
+	return Engine::instance->m_window->mapPixelToCoords(sf::Vector2i(mousePosInWindow.x, mousePosInWindow.y));
+}
+
+float Input::getWheelDelta()
+{
+	return mouseWheelDelta;
 }
 
 void Input::Reset()
@@ -110,8 +120,8 @@ void Input::Check(sf::Event& e)
 		mouseWheelDelta = e.mouseWheelScroll.delta;
 		break;
 	case sf::Event::MouseMoved:
-		mousePos.x = e.mouseMove.x;
-		mousePos.y = e.mouseMove.y;
+		mousePosInWindow.x = e.mouseMove.x;
+		mousePosInWindow.y = e.mouseMove.y;
 		break;
 	default:
 		break;

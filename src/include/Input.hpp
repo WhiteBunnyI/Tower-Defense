@@ -14,7 +14,9 @@ private:
 	std::map<sf::Mouse::Button, bool> mousePressed;
 	std::map<sf::Mouse::Button, bool> mouseReleased;
 	std::map<sf::Mouse::Button, bool> mouseHold;
-	sf::Vector2f mousePos;
+
+	sf::Vector2f mousePosInWindow;
+	sf::Vector2f mousePosInWorld;
 	float mouseWheelDelta;
 
 public:
@@ -34,8 +36,10 @@ public:
 
 	bool isHasFocus();
 
-	sf::Vector2f getMousePos();
+	sf::Vector2f getMousePosInWindow();
+	sf::Vector2f getMousePosInWorld();
 
+	float getWheelDelta();
 
 private:
 	void Reset();

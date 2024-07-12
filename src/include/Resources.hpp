@@ -14,8 +14,15 @@ public:
 		oil
 	};
 
-	std::map<resource, int> resources{ {resource::wood, 0}, {resource::iron, 0}, {resource::gold, 0}, {resource::oil,0} };
+	std::map<resource, int> resources;
 	
+	Resources()
+	{
+		resources[resource::wood] = 0;
+		resources[resource::iron] = 0;
+		resources[resource::gold] = 0;
+	}
+
 	static sf::Texture* Image(resource type)
 	{
 		sf::Texture* result = new sf::Texture();

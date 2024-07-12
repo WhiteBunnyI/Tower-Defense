@@ -1,6 +1,12 @@
 #include <Camera.hpp>
 #include <Engine.hpp>
 
+void Camera::SetSize(sf::Vector2f size)
+{
+	Engine::instance->m_view->setSize(size);
+	Engine::instance->UpdateView();
+}
+
 void Camera::SetPosition(sf::Vector2f pos)
 {
 	Engine::instance->m_view->setCenter(pos);

@@ -119,25 +119,34 @@ MapGenerator::MapGenerator(Vector2I size) :
 			auto b = (*m_dataTemp)[x][y];
 			auto d = (*m_dataDeposit)[x][y];
 			auto h = (*m_dataHeight)[x][y];
-			auto pos = GridCoordsToCoords(x, y);
+			auto pos = GridCoordsToCenterCoords(x, y);
 
 			if (d >= 0.75f)
 			{
 				if (b > 0.6f)
 				{
+					if (h >= 0.72f)
+						continue;
+
 					m_objects.emplace_back(pos, oil);
+					m_objects.back().render->setOrigin(8, 20);
 					(m_ground[x + y * m_size.x])->speed *= Resources::MoveModification(Resources::resource::oil);
 					continue;
 				}
 				if (b <= 0.4f)
 				{
+					if (h >= 0.65f)
+						continue;
+
 					if (d >= 0.8f)
 					{
 						m_objects.emplace_back(pos, gold);
+						m_objects.back().render->setOrigin(8, 20);
 						(m_ground[x + y * m_size.x])->speed *= Resources::MoveModification(Resources::resource::gold);
 						continue;
 					}
 					m_objects.emplace_back(pos, iron);
+					m_objects.back().render->setOrigin(8, 20);
 					(m_ground[x + y * m_size.x])->speed *= Resources::MoveModification(Resources::resource::iron);
 					continue;
 				}
@@ -146,9 +155,10 @@ MapGenerator::MapGenerator(Vector2I size) :
 			{
 				if (b <= 0.6f && b > 0.4f)
 				{
-					if(h < 0.6f && h > 0.41f)
+					if (h < 0.6f && h > 0.41f)
 					{
 						m_objects.emplace_back(pos, tree);
+						m_objects.back().render->setOrigin(8, 20);
 						(m_ground[x + y * m_size.x])->speed *= Resources::MoveModification(Resources::resource::wood);
 					}
 				}
