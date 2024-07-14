@@ -1,13 +1,14 @@
 #include <Engine.hpp>
 
-Engine::Engine(int gameWidth, int gameHeight) : 
-	m_gameHeight{ gameHeight }, 
-	m_gameWidth{ gameWidth }, 
+Engine::Engine(int gameWidth, int gameHeight, sf::Vector2i gridSizeCollision, sf::Vector2i mapSize) :
+	m_gameHeight{ gameHeight },
+	m_gameWidth{ gameWidth },
 	m_view{ new sf::View(sf::Vector2f(m_gameWidth / 2.f, m_gameHeight / 2.f), sf::Vector2f(m_gameWidth, m_gameHeight)) },
 	m_window{ new sf::RenderWindow(sf::VideoMode(static_cast<unsigned int>(m_gameWidth), static_cast<unsigned int>(m_gameHeight), 32), "Tower Defense",
 		sf::Style::Titlebar | sf::Style::Close) },
-	deltaTime{0},
-	threadPool{4}
+	deltaTime{ 0 },
+	m_collision{ gridSizeCollision , mapSize },
+	threadPool{ 4 }
 {
 	if (Engine::instance != nullptr)
 	{

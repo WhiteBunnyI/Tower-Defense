@@ -28,10 +28,10 @@ int main()
 {
 	setlocale(LC_ALL, "rus");
 	std::srand(time(0));
-	Engine engine(800, 600);
+	Engine engine(800, 600, sf::Vector2i(20, 20), sf::Vector2i(200 * 16, 200 * 16));
 
 	Singleton singleton;
-	MapGenerator map(Vector2I(200, 200));
+	MapGenerator map(Vector2I(200, 200), 16);
 	singleton.map = &map;
 
 	sf::Image height(NoiseToImage(map.getDataHeight()));

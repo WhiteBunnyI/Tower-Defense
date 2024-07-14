@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <Engine.hpp>
 
 class Resources
 {
@@ -15,7 +16,7 @@ public:
 	};
 
 	std::map<resource, int> resources;
-	
+
 	Resources()
 	{
 		resources[resource::wood] = 0;

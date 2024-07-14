@@ -3,6 +3,7 @@
 #include <Vector2.hpp>
 #include <Tile.hpp>
 #include <Noise.hpp>
+#include <list>
 #include <GameObject.hpp>
 
 class MapGenerator
@@ -13,13 +14,13 @@ class MapGenerator
 	my::Noise_Output* m_dataDeposit;
 	Vector2I m_size;
 	std::vector<Tile*> m_ground;
-	std::list<GameObject> m_objects;
+	std::list<GameObject*> m_objects;
 	GameObject* m_groundObject;
 
 public:
 	const int m_texturesSize = 16;
 	MapGenerator() = default;
-	MapGenerator(Vector2I size);
+	MapGenerator(Vector2I size, int textureSize);
 	MapGenerator(const MapGenerator& other) = delete;
 	MapGenerator& operator=(const MapGenerator& other) = delete;
 	~MapGenerator();

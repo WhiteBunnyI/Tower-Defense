@@ -19,7 +19,8 @@ Player::Player(float speed, float sprintMultiple) : GameObject(),
 	isAttack{ false },
 	attackDur{ 0.25f },
 	attackTimer{ 0 },
-	attackAngle{ 0 }
+	attackAngle{ 0 },
+	collider{ this, render->getPosition(), 8 }
 {
 	sf::Vector2f pos = Singleton::instance->map->getPlayerCoordsSpawn();
 	m_camera.SetPosition(pos);
@@ -55,9 +56,15 @@ Player::Player(float speed, float sprintMultiple) : GameObject(),
 	statue = GameObject(pos, statueTexture, true);
 	statue.render->setOrigin(Singleton::instance->map->m_texturesSize / 2.f, Singleton::instance->map->m_texturesSize);
 	statue.render->setPosition(pos);
-
 	ChangeVis(&pickaxe);
 	ChangeVis(&axe);
+
+	colliderShape.setRadius(8);
+	colliderShape.setFillColor(sf::Color::Transparent);
+	colliderShape.setOutlineThickness(1);
+	colliderShape.setOutlineColor(sf::Color::Magenta);
+	colliderShape.setOrigin(8, 8);
+	Engine::instance->m_manualRender.push_back(&colliderShape);
 }
 
 void Player::Start()
@@ -69,6 +76,8 @@ void Player::Start()
 
 void Player::Update()
 {
+	colliderShape.setPosition(render->getPosition());
+	collider.Update(render->getPosition());
 	if (input->isHasFocus())
 	{
 		Move();
@@ -76,6 +85,15 @@ void Player::Update()
 		if (!isAttack)
 		{
 			ChangeTool();
+		}
+	}
+	std::list<Collision::BaseCollider*> p = Engine::instance->m_collision.getCollisions(&collider);
+
+	if (!p.empty())
+	{
+		for (auto i : p)
+		{
+			std::cout << "Пересекает: " << i->center.x << "," << i->center.y << std::endl;
 		}
 	}
 }
@@ -137,25 +155,6 @@ void Player::Attack()
 
 			attackAngle = std::atan2(AC.y, AC.x) * 180.f / 3.14f;
 
-			//AD.x = AB.x * std::cosf(-0.523599f) - AB.y * std::sinf(-0.523599f);
-			//AD.y = AB.x * std::sinf(-0.523599f) + AB.y * std::cosf(-0.523599f);
-
-			//sf::CircleShape* c = new sf::CircleShape(4);
-			//c->setOrigin(2, 2);
-			//c->setPosition(AC + render->getPosition());
-			//c->setFillColor(sf::Color::Blue);
-
-			//sf::CircleShape* d = new sf::CircleShape(4);
-			//d->setOrigin(2, 2);
-			//d->setPosition(AD + render->getPosition());
-			//d->setFillColor(sf::Color::Red);
-
-			//Engine::instance->m_manualRender.push_back(c);
-			//Engine::instance->m_manualRender.push_back(d);
-
-			//std::cout << "Player: " << render->getPosition().x << "," << render->getPosition().y
-			//	<< " | Dot: " << c->getPosition().x << "," << c->getPosition().y << std::endl;
-
 			std::cout << attackAngle << std::endl;
 
 			currentToolObj->render->setPosition(AC + render->getPosition());
@@ -179,7 +178,7 @@ void Player::Attack()
 		else
 		{
 			//[0, 1] = [0, 60] градусов
-			std::cout << attackTimer << std::endl;
+			//std::cout << attackTimer << std::endl;
 			float newAngle = attackAngle + 60.f * attackTimer;
 			currentToolObj->render->setRotation(newAngle + 90);
 

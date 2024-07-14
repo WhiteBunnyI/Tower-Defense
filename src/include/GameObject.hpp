@@ -31,5 +31,3 @@ public:
 	void SetPosition(float x, float y);
 
 };
-
-#include <Engine.hpp>

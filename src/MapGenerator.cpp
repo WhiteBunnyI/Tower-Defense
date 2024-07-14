@@ -1,13 +1,15 @@
 #include <MapGenerator.hpp>
 #include <Engine.hpp>
 #include <Resources.hpp>
+#include <Deposit.hpp>
 
-MapGenerator::MapGenerator(Vector2I size) :
+MapGenerator::MapGenerator(Vector2I size, int textureSize) :
 	m_seed{ std::rand() },
 	m_size{ size },
 	m_dataHeight{ my::Perlin_Noise::GetNoise(m_seed, Vector2I(20,20), size) },
 	m_dataTemp{ my::Perlin_Noise::GetNoise(m_seed, Vector2I(2, 2), size) },
-	m_dataDeposit{ my::Perlin_Noise::GetNoise(m_seed, Vector2I(50,50), size) }
+	m_dataDeposit{ my::Perlin_Noise::GetNoise(m_seed, Vector2I(50,50), size) },
+	m_texturesSize{ textureSize }
 {
 	m_ground.resize(size.x * size.y);
 
@@ -111,6 +113,7 @@ MapGenerator::MapGenerator(Vector2I size) :
 	texture->loadFromImage(map);
 	m_groundObject = new GameObject(sf::Vector2f(0, 0), texture, true);
 
+	Deposit* dep;
 	for (int y = 0; y < m_size.y; ++y)
 	{
 		for (int x = 0; x < m_size.x; ++x)
@@ -127,9 +130,9 @@ MapGenerator::MapGenerator(Vector2I size) :
 				{
 					if (h >= 0.72f)
 						continue;
-
-					m_objects.emplace_back(pos, oil);
-					m_objects.back().render->setOrigin(8, 20);
+					dep = new Deposit(pos, oil, 300, 30, Resources::resource::oil);
+					dep->render->setOrigin(8, 20);
+					m_objects.push_back(dep);
 					(m_ground[x + y * m_size.x])->speed *= Resources::MoveModification(Resources::resource::oil);
 					continue;
 				}
@@ -140,13 +143,15 @@ MapGenerator::MapGenerator(Vector2I size) :
 
 					if (d >= 0.8f)
 					{
-						m_objects.emplace_back(pos, gold);
-						m_objects.back().render->setOrigin(8, 20);
+						dep = new Deposit(pos, gold, 300, 30, Resources::resource::gold);
+						dep->render->setOrigin(8, 20);
+						m_objects.push_back(dep);
 						(m_ground[x + y * m_size.x])->speed *= Resources::MoveModification(Resources::resource::gold);
 						continue;
 					}
-					m_objects.emplace_back(pos, iron);
-					m_objects.back().render->setOrigin(8, 20);
+					dep = new Deposit(pos, iron, 300, 30, Resources::resource::iron);
+					dep->render->setOrigin(8, 20);
+					m_objects.push_back(dep);
 					(m_ground[x + y * m_size.x])->speed *= Resources::MoveModification(Resources::resource::iron);
 					continue;
 				}
@@ -157,8 +162,9 @@ MapGenerator::MapGenerator(Vector2I size) :
 				{
 					if (h < 0.6f && h > 0.41f)
 					{
-						m_objects.emplace_back(pos, tree);
-						m_objects.back().render->setOrigin(8, 20);
+						dep = new Deposit(pos, oil, 300, 30, Resources::resource::iron);
+						dep->render->setOrigin(8, 20);
+						m_objects.push_back(dep);
 						(m_ground[x + y * m_size.x])->speed *= Resources::MoveModification(Resources::resource::wood);
 					}
 				}

@@ -4,6 +4,7 @@
 #include <Camera.hpp>
 #include <Input.hpp>
 #include <Resources.hpp>
+#include <Collision.hpp>
 
 class Player : public GameObject
 {
@@ -25,6 +26,9 @@ class Player : public GameObject
 	GameObject statue;
 	GameObject* currentToolObj;
 	Tools currentTool;
+	Collision::CircleCollider collider;
+
+	sf::CircleShape colliderShape;
 
 	Resources resources;
 

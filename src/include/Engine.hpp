@@ -17,6 +17,7 @@
 #include <MapGenerator.hpp>
 #include <EventHolder.hpp>
 #include <ThreadPool.hpp>
+#include <Collision.hpp>
 
 class Engine
 {
@@ -28,6 +29,7 @@ public:
 	int m_gameHeight;
 
 	my::ThreadPool threadPool;
+	Collision m_collision;
 	Input* m_input;
 
 	sf::View* m_view;
@@ -43,18 +45,17 @@ public:
 	std::list<BaseEventHolder*> m_events;
 	std::list<sf::Texture*> m_textures;
 
-	Engine(int gameWidth, int gameHeight);
+	Engine(int gameWidth, int gameHeight, sf::Vector2i gridSizeCollision, sf::Vector2i mapSize);
 	Engine(const Engine& engine) = delete;
 	Engine& operator=(const Engine& other) = delete;
 	~Engine();
 
 	template<typename T>
-	static void ClearList(std::list<T> lst)
+	static void ClearList(std::list<T>& lst)
 	{
 		for (auto iter = lst.begin(); iter != lst.end(); ++iter)
 		{
-			if ((*iter) != nullptr)
-				delete (*iter);
+			delete (*iter);
 		}
 		lst.clear();
 	}
