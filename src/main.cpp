@@ -5,6 +5,7 @@
 #include <Singleton.hpp>
 #include <PathFinding.hpp>
 #include <Player.hpp>
+#include <Enemy.hpp>
 
 sf::Image NoiseToImage(my::Noise_Output& noise)
 {
@@ -42,6 +43,10 @@ int main()
 	deposits.saveToFile("./DepositMap.png");
 
 	Player player(120, 2);
+	singleton.player = &player;
+	sf::Texture* enemyTexture = new sf::Texture();
+	enemyTexture->loadFromFile("./resources/MiniWorldSprites/Characters/Monsters/Slimes");
+	Enemy enemy(player.render->getPosition() - sf::Vector2f(32, 0), enemyTexture);
 
 	engine.CrankUp();
 
