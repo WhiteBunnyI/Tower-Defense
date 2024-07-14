@@ -7,7 +7,6 @@ Engine::Engine(int gameWidth, int gameHeight, sf::Vector2i gridSizeCollision, sf
 	m_window{ new sf::RenderWindow(sf::VideoMode(static_cast<unsigned int>(m_gameWidth), static_cast<unsigned int>(m_gameHeight), 32), "Tower Defense",
 		sf::Style::Titlebar | sf::Style::Close) },
 	deltaTime{ 0 },
-	m_collision{ gridSizeCollision , mapSize },
 	threadPool{ 4 }
 {
 	if (Engine::instance != nullptr)
@@ -19,6 +18,7 @@ Engine::Engine(int gameWidth, int gameHeight, sf::Vector2i gridSizeCollision, sf
 	m_window->setVerticalSyncEnabled(true);
 	m_window->setView(*m_view);
 	m_input = new Input();
+	m_collision = new Collision(gridSizeCollision, mapSize);
 }
 
 bool Engine::IsPlaying()
@@ -36,12 +36,12 @@ Engine::~Engine()
 	delete m_view;
 	delete m_window;
 	delete m_input;
-	ClearList(m_update);
-	ClearList(m_coroutines);
-	ClearList(m_events);
-	ClearList(m_start);
+	ClearListWithAutoRemove(m_update);
+	ClearListWithAutoRemove(m_coroutines);
+	ClearListWithAutoRemove(m_events);
+	ClearListWithAutoRemove(m_start);
+	ClearListWithAutoRemove(m_render);
 	ClearList(m_manualRender);
-	ClearList(m_render);
 	ClearList(m_textures);
 }
 

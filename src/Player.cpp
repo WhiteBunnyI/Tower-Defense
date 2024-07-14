@@ -9,18 +9,20 @@ void ChangeVis(GameObject* obj)
 	obj->render->setColor(color);
 }
 
-Player::Player(float speed, float sprintMultiple) : GameObject(),
+Player::Player(float speed, float sprintMultiple) : 
+	GameObject(),
 	speed{ speed },
 	sprintMultiple{ sprintMultiple },
 	input{ Engine::instance->m_input },
 	currentTool{ Tools::sword },
 	currentToolObj{ &sword },
-	attackRadius{ Singleton::instance->map->m_texturesSize / 1.5f },
+	attackRadius{ 1.f * Singleton::instance->map->m_texturesSize },
 	isAttack{ false },
 	attackDur{ 0.25f },
 	attackTimer{ 0 },
 	attackAngle{ 0 },
-	collider{ this, render->getPosition(), 8 }
+	playerCollider{ this, render->getPosition(), 8 },
+	attackCollider{ &sword, sf::Vector2f(0,0), 3 }
 {
 	sf::Vector2f pos = Singleton::instance->map->getPlayerCoordsSpawn();
 	m_camera.SetPosition(pos);
@@ -30,26 +32,28 @@ Player::Player(float speed, float sprintMultiple) : GameObject(),
 	render->setTexture(*texture, true);
 	render->setPosition(pos);
 
+	defaultToolPos = sf::Vector2f(13, -4);
+
 	sf::Texture* swordTexture = new sf::Texture();
 	swordTexture->loadFromFile("./resources/player/sword.png");
 	sword = GameObject(pos, swordTexture, true);
-	sword.render->setOrigin(Singleton::instance->map->m_texturesSize / 2.f, Singleton::instance->map->m_texturesSize);
+	sword.render->setOrigin(Singleton::instance->map->m_texturesSize / 2.f, Singleton::instance->map->m_texturesSize / 2.f);
 	sword.render->setRotation(35);
-	sword.render->setPosition(pos + sf::Vector2f(8, 0));
+	sword.render->setPosition(pos + defaultToolPos);
 
 	sf::Texture* pickaxeTexture = new sf::Texture();
 	pickaxeTexture->loadFromFile("./resources/player/pickaxe.png");
 	pickaxe = GameObject(pos, pickaxeTexture, true);
-	pickaxe.render->setOrigin(Singleton::instance->map->m_texturesSize / 2.f, Singleton::instance->map->m_texturesSize);
+	pickaxe.render->setOrigin(Singleton::instance->map->m_texturesSize / 2.f, Singleton::instance->map->m_texturesSize / 2.f);
 	pickaxe.render->setRotation(35);
-	pickaxe.render->setPosition(pos + sf::Vector2f(8, 0));
+	pickaxe.render->setPosition(pos + defaultToolPos);
 
 	sf::Texture* axeTexture = new sf::Texture();
 	axeTexture->loadFromFile("./resources/player/axe.png");
 	axe = GameObject(pos, axeTexture, true);
-	axe.render->setOrigin(Singleton::instance->map->m_texturesSize / 2.f, Singleton::instance->map->m_texturesSize);
+	axe.render->setOrigin(Singleton::instance->map->m_texturesSize / 2.f, Singleton::instance->map->m_texturesSize / 2.f);
 	axe.render->setRotation(35);
-	axe.render->setPosition(pos + sf::Vector2f(8, 0));
+	axe.render->setPosition(pos + defaultToolPos);
 
 	sf::Texture* statueTexture = new sf::Texture();
 	statueTexture->loadFromFile("./resources/player/statue.png");
@@ -59,12 +63,13 @@ Player::Player(float speed, float sprintMultiple) : GameObject(),
 	ChangeVis(&pickaxe);
 	ChangeVis(&axe);
 
-	colliderShape.setRadius(8);
-	colliderShape.setFillColor(sf::Color::Transparent);
-	colliderShape.setOutlineThickness(1);
-	colliderShape.setOutlineColor(sf::Color::Magenta);
-	colliderShape.setOrigin(8, 8);
-	Engine::instance->m_manualRender.push_back(&colliderShape);
+	//colliderShape = new sf::CircleShape();
+	//colliderShape->setRadius(8);
+	//colliderShape->setFillColor(sf::Color::Transparent);
+	//colliderShape->setOutlineThickness(1);
+	//colliderShape->setOutlineColor(sf::Color::Magenta);
+	//colliderShape->setOrigin(8, 8);
+	//Engine::instance->m_manualRender.push_back(colliderShape);
 }
 
 void Player::Start()
@@ -76,8 +81,7 @@ void Player::Start()
 
 void Player::Update()
 {
-	colliderShape.setPosition(render->getPosition());
-	collider.Update(render->getPosition());
+	//colliderShape->setPosition(render->getPosition());
 	if (input->isHasFocus())
 	{
 		Move();
@@ -87,15 +91,7 @@ void Player::Update()
 			ChangeTool();
 		}
 	}
-	std::list<Collision::BaseCollider*> p = Engine::instance->m_collision.getCollisions(&collider);
-
-	if (!p.empty())
-	{
-		for (auto i : p)
-		{
-			std::cout << "Пересекает: " << i->center.x << "," << i->center.y << std::endl;
-		}
-	}
+	playerCollider.Update(render->getPosition());
 }
 
 
@@ -107,7 +103,7 @@ void Player::ChangeTool()
 
 		currentTool = Tools::sword;
 		currentToolObj = &sword;
-		currentToolObj->render->setPosition(render->getPosition() + sf::Vector2f(8, 0));
+		currentToolObj->render->setPosition(render->getPosition() + sf::Vector2f(13, -8));
 		ChangeVis(currentToolObj);
 	}
 	else if (input->isPressed(sf::Keyboard::Num2))
@@ -116,7 +112,7 @@ void Player::ChangeTool()
 
 		currentTool = Tools::pickaxe;
 		currentToolObj = &pickaxe;
-		currentToolObj->render->setPosition(render->getPosition() + sf::Vector2f(8, 0));
+		currentToolObj->render->setPosition(render->getPosition() + defaultToolPos);
 		ChangeVis(currentToolObj);
 	}
 	else if (input->isPressed(sf::Keyboard::Num3))
@@ -125,7 +121,7 @@ void Player::ChangeTool()
 
 		currentTool = Tools::axe;
 		currentToolObj = &axe;
-		currentToolObj->render->setPosition(render->getPosition() + sf::Vector2f(8, 0));
+		currentToolObj->render->setPosition(render->getPosition() + defaultToolPos);
 		ChangeVis(currentToolObj);
 	}
 }
@@ -161,18 +157,12 @@ void Player::Attack()
 		}
 
 	}
-	if (input->isPressed(sf::Keyboard::R))
-	{
-		sf::Color color = sword.render->getColor();
-		color.a = std::abs(color.a - 255);
-		sword.render->setColor(color);
-	}
 	if (isAttack)
 	{
 		if (attackTimer >= 1.f)
 		{
 			isAttack = false;
-			currentToolObj->render->setPosition(render->getPosition() + sf::Vector2f(8, 0));
+			currentToolObj->render->setPosition(render->getPosition() + defaultToolPos);
 			currentToolObj->render->setRotation(35);
 		}
 		else
@@ -186,8 +176,19 @@ void Player::Attack()
 			sf::Vector2f newPos(render->getPosition().x + attackRadius * std::cosf(newAngle), render->getPosition().y + attackRadius * std::sinf(newAngle));
 
 			currentToolObj->render->setPosition(newPos);
+			attackCollider.Update(newPos);
 
 			attackTimer += Engine::instance->deltaTime / attackDur;
+
+			std::list<Collision::BaseCollider*> p = Engine::instance->m_collision->getCollisions(&attackCollider);
+
+			if (!p.empty())
+			{
+				for (auto i : p)
+				{
+					std::cout << "Пересекает: " << i->center.x << "," << i->center.y << std::endl;
+				}
+			}
 		}
 	}
 }

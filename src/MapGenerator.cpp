@@ -162,7 +162,7 @@ MapGenerator::MapGenerator(Vector2I size, int textureSize) :
 				{
 					if (h < 0.6f && h > 0.41f)
 					{
-						dep = new Deposit(pos, oil, 300, 30, Resources::resource::iron);
+						dep = new Deposit(pos, tree, 300, 30, Resources::resource::iron);
 						dep->render->setOrigin(8, 20);
 						m_objects.push_back(dep);
 						(m_ground[x + y * m_size.x])->speed *= Resources::MoveModification(Resources::resource::wood);

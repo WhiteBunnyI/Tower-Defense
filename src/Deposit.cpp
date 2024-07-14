@@ -3,7 +3,7 @@
 Deposit::Deposit(const sf::Vector2f position, sf::Texture* texture, int health, int resourceCount, Resources::resource typeResource) : 
 	GameObject(position, texture),
 	IMineable(resourceCount, health, typeResource),
-	collider{ this, position, 5 }
+	collider{ this, position, 5, false }
 {
 
 }

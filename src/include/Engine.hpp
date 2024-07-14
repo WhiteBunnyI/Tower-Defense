@@ -29,7 +29,7 @@ public:
 	int m_gameHeight;
 
 	my::ThreadPool threadPool;
-	Collision m_collision;
+	Collision* m_collision;
 	Input* m_input;
 
 	sf::View* m_view;
@@ -49,6 +49,16 @@ public:
 	Engine(const Engine& engine) = delete;
 	Engine& operator=(const Engine& other) = delete;
 	~Engine();
+
+	template<typename T>
+	static void ClearListWithAutoRemove(std::list<T>& lst)
+	{
+		while (!lst.empty())
+		{
+			delete (*(lst.begin()));
+		}
+		lst.clear();
+	}
 
 	template<typename T>
 	static void ClearList(std::list<T>& lst)

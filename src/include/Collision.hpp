@@ -5,6 +5,10 @@
 #include <vector>
 #include <GameObject.hpp>
 
+#define DEBUG_COLLISION
+
+
+
 class Collision
 {
 	static inline Collision* instance{ nullptr };
@@ -51,7 +55,7 @@ public:
 
 		BaseCollider(GameObject* obj, sf::Vector2f center) : center{ center }, object{ obj }
 		{
-
+		
 		}
 
 	};
@@ -87,19 +91,15 @@ public:
 	struct CircleCollider : public BaseCollider
 	{
 		float radius;
+#ifdef DEBUG_COLLISION
+		sf::CircleShape* c;
+#endif // DEBUG_COLLISION
+
 
 		CircleCollider() = default;
 
-		CircleCollider(GameObject* obj, sf::Vector2f center, float radius, bool isTempCollider = false) : BaseCollider(obj, center), radius{ radius }
-		{
-			if(!isTempCollider)
-				Collision::instance->UpdateCollider(this);
-		}
-		void Update(sf::Vector2f center)
-		{
-			this->center = center;
-			Collision::instance->UpdateCollider(this);
-		}
+		CircleCollider(GameObject* obj, sf::Vector2f center, float radius, bool isTempCollider = false);
+		void Update(sf::Vector2f center);
 	};
 };
 

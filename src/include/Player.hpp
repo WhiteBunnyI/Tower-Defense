@@ -26,9 +26,10 @@ class Player : public GameObject
 	GameObject statue;
 	GameObject* currentToolObj;
 	Tools currentTool;
-	Collision::CircleCollider collider;
-
-	sf::CircleShape colliderShape;
+	Collision::CircleCollider playerCollider;
+	Collision::CircleCollider attackCollider;
+	sf::Vector2f defaultToolPos;
+	//sf::CircleShape* colliderShape;
 
 	Resources resources;
 

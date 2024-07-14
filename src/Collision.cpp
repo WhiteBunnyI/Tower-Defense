@@ -1,7 +1,36 @@
 #include <Collision.hpp>
 #include <Engine.hpp>
 
-#define DEBUG_COLLISION
+//CircleCollider
+
+Collision::CircleCollider::CircleCollider(GameObject* obj, sf::Vector2f center, float radius, bool isTempCollider) : BaseCollider(obj, center), radius{ radius }
+{
+	if (!isTempCollider)
+		Collision::instance->UpdateCollider(this);
+#ifdef DEBUG_COLLISION
+	c = new sf::CircleShape();
+	c->setRadius(radius);
+	c->setOrigin(radius, radius);
+	c->setFillColor(sf::Color::Transparent);
+	c->setOutlineThickness(1);
+	c->setOutlineColor(sf::Color::Red);
+	c->setPosition(center);
+	Engine::instance->m_manualRender.push_back(c);
+#endif // DEBUG_COLLISION
+
+}
+
+void Collision::CircleCollider::Update(sf::Vector2f center)
+{
+	this->center = center;
+	Collision::instance->UpdateCollider(this);
+#ifdef DEBUG_COLLISION
+	c->setPosition(center);
+#endif // DEBUG_COLLISION
+
+}
+
+//Collision
 
 Collision::Collision(sf::Vector2i gridSize, sf::Vector2i mapSize) : gridSize{ gridSize }, mapSize{mapSize}
 {
@@ -9,14 +38,24 @@ Collision::Collision(sf::Vector2i gridSize, sf::Vector2i mapSize) : gridSize{ gr
 		throw new std::runtime_error("Change grid size!");
 	grid = new std::list<BaseCollider*>[gridSize.x * gridSize.y];
 
-	/*for (int y = 0; y < gridSize.y; ++y)
+#ifdef DEBUG_COLLISION
+	int sizeX = mapSize.x / gridSize.x;
+	int sizeY = mapSize.y / gridSize.y;
+	for (int y = 0; y < gridSize.y; ++y)
 	{
 		for (int x = 0; x < gridSize.x; ++x)
 		{
-			grid[x + y * gridSize.x] = std::list<BaseCollider*>();
+			sf::RectangleShape* s = new sf::RectangleShape();
+			s->setPosition(sf::Vector2f(x * sizeX + sizeX / 2.f, y * sizeY + sizeY / 2.f));
+			s->setOrigin(sizeX / 2, sizeY / 2);
+			s->setSize(sf::Vector2f(sizeX, sizeY));
+			s->setOutlineThickness(1);
+			s->setFillColor(sf::Color::Transparent);
+			s->setOutlineColor(sf::Color::Green);
+			Engine::instance->m_manualRender.push_back(s);
 		}
-	}*/
-
+	}
+#endif // DEBUG
 	instance = this;
 }
 
@@ -97,7 +136,7 @@ void Collision::UpdateCollider(CircleCollider* collider)
 	int sizeX = mapSize.x / gridSize.x;
 	int sizeY = mapSize.y / gridSize.y;
 	sf::Vector2i gridPos(collider->center.x / sizeX, collider->center.y / sizeY);
-	std::list<BaseCollider*> l = getList(gridPos);
+	std::list<BaseCollider*>& l = getList(gridPos);
 	l.push_back(collider);
 	for (int _y = -1; _y < 2; ++_y)
 	{
@@ -110,35 +149,16 @@ void Collision::UpdateCollider(CircleCollider* collider)
 				(otherGrid.y >= 0 && otherGrid.y < gridSize.y))
 			{
 				BoxCollider gridCollider(nullptr, sf::Vector2f(otherGrid.x * sizeX + sizeX / 2.f, otherGrid.y * sizeY + sizeY / 2.f), sf::Vector2f(sizeX / 2, sizeY / 2), true);
+				auto lst = getList(otherGrid);
+				lst.remove(collider);
 				if (CheckCollision(collider, &gridCollider))
 				{
-					getList(otherGrid).push_back(collider);
+					lst.push_back(collider);
+					continue;
 				}
 			}
 		}
 	}
-
-#ifdef DEBUG_COLLISION
-
-	sf::RectangleShape* s = new sf::RectangleShape();
-	s->setPosition(sf::Vector2f(gridPos.x * sizeX + sizeX / 2.f, gridPos.y * sizeY + sizeY / 2.f));
-	s->setOrigin(sizeX / 2, sizeY / 2);
-	s->setSize(sf::Vector2f(sizeX, sizeY));
-	s->setOutlineThickness(1);
-	s->setFillColor(sf::Color::Transparent);
-	s->setOutlineColor(sf::Color::Green);
-	Engine::instance->m_manualRender.push_back(s);
-
-	sf::CircleShape* c = new sf::CircleShape();
-	c->setRadius(collider->radius);
-	c->setOrigin(collider->radius, collider->radius);
-	c->setFillColor(sf::Color::Transparent);
-	c->setOutlineThickness(1);
-	c->setOutlineColor(sf::Color::Red);
-	c->setPosition(collider->center);
-	Engine::instance->m_manualRender.push_back(c);
-
-#endif // DEBUG_COLLISION
 
 }
 
@@ -248,6 +268,7 @@ bool Collision::CheckCollision(const CircleCollider* circle, const BoxCollider* 
 	if ((b_leftTop.x <= circle->center.x && circle->center.x <= b_rightBottom.x) && (b_leftTop.y <= circle->center.y && circle->center.y <= b_rightBottom.y))
 		return true;
 
+	//Надо исправить: сделать, чтобы он учитывал поворот квадратного коллайдера, да и сам алгоритм не рабочий
 	return ((std::abs(b_leftTop.x - circle->center.x) <= circle->radius) || (std::abs(b_rightBottom.x - circle->center.x) <= circle->radius)) &&
 		((std::abs(b_leftTop.y - circle->center.y) <= circle->radius) || (std::abs(b_rightBottom.y - circle->center.y) <= circle->radius));
 }
