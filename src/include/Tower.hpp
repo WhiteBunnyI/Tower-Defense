@@ -7,19 +7,19 @@
 #include <IPlaceable.hpp>
 #include <Resources.hpp>
 
-class Tower : public GameObject, public IDamageable, public IMovable, public IPlaceable
+class Tower : public GameObject, public IHittable, public IMovable, public IPlaceable
 {
 	int m_hp;
 	TypeOfTowers m_type;
 
 public:
 
-	Tower(Vector2 position) : GameObject(position)
+	Tower(Vector2 position) : GameObject(position, nullptr), IHittable(0)
 	{
 		m_type = TypeOfTowers::squad_one;
 	}
 	
-	void Damage(int damage) override
+	bool Hit(int damage) override
 	{
 
 	}

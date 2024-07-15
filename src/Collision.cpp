@@ -3,7 +3,7 @@
 
 //CircleCollider
 
-Collision::CircleCollider::CircleCollider(GameObject* obj, sf::Vector2f center, float radius, bool isTempCollider) : BaseCollider(obj, center), radius{ radius }
+Collision::CircleCollider::CircleCollider(GameObject* obj, sf::Vector2f center, float radius, bool isTrigger, bool isTempCollider) : BaseCollider(obj, center, isTrigger), radius{ radius }
 {
 	if (!isTempCollider)
 		Collision::instance->UpdateCollider(this);
@@ -16,6 +16,15 @@ Collision::CircleCollider::CircleCollider(GameObject* obj, sf::Vector2f center, 
 	c->setOutlineColor(sf::Color::Red);
 	c->setPosition(center);
 	Engine::instance->m_manualRender.push_back(c);
+#endif // DEBUG_COLLISION
+
+}
+
+Collision::CircleCollider::~CircleCollider()
+{
+	Collision::instance->RemoveCollider(this);
+#ifdef DEBUG_COLLISION
+	Engine::instance->m_manualRender.remove(c);
 #endif // DEBUG_COLLISION
 
 }
@@ -137,6 +146,7 @@ void Collision::UpdateCollider(CircleCollider* collider)
 	int sizeY = mapSize.y / gridSize.y;
 	sf::Vector2i gridPos(collider->center.x / sizeX, collider->center.y / sizeY);
 	std::list<BaseCollider*>& l = getList(gridPos);
+	l.remove(collider);
 	l.push_back(collider);
 	for (int _y = -1; _y < 2; ++_y)
 	{
@@ -160,6 +170,30 @@ void Collision::UpdateCollider(CircleCollider* collider)
 		}
 	}
 
+}
+
+void Collision::RemoveCollider(CircleCollider* collider)
+{
+	int sizeX = mapSize.x / gridSize.x;
+	int sizeY = mapSize.y / gridSize.y;
+	sf::Vector2i gridPos(collider->center.x / sizeX, collider->center.y / sizeY);
+	std::list<BaseCollider*>& l = getList(gridPos);
+	l.remove(collider);
+	for (int _y = -1; _y < 2; ++_y)
+	{
+		for (int _x = -1; _x < 2; ++_x)
+		{
+			if (_x == 0 && _y == 0)
+				continue;
+			sf::Vector2i otherGrid(gridPos.x + _x, gridPos.y + _y);
+			if ((otherGrid.x >= 0 && otherGrid.x < gridSize.x) &&
+				(otherGrid.y >= 0 && otherGrid.y < gridSize.y))
+			{
+				auto lst = getList(otherGrid);
+				lst.remove(collider);
+			}
+		}
+	}
 }
 
 void Collision::checkCollisions(BoxCollider* collider, std::list<BaseCollider*>& where_check, std::list<BaseCollider*>& saveTo)

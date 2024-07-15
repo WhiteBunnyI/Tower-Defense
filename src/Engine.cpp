@@ -7,7 +7,7 @@ Engine::Engine(int gameWidth, int gameHeight, sf::Vector2i gridSizeCollision, sf
 	m_window{ new sf::RenderWindow(sf::VideoMode(static_cast<unsigned int>(m_gameWidth), static_cast<unsigned int>(m_gameHeight), 32), "Tower Defense",
 		sf::Style::Titlebar | sf::Style::Close) },
 	deltaTime{ 0 },
-	threadPool{ 4 }
+	threadPool{ new my::ThreadPool(6)}
 {
 	if (Engine::instance != nullptr)
 	{
@@ -71,6 +71,7 @@ void Engine::CrankUp()
 			{
 				m_window->close();
 				isPlaying = false;
+				delete threadPool;
 				break;
 			}
 

@@ -5,9 +5,9 @@
 struct IRenderable
 {
 	sf::Sprite* render;
-	IRenderable(sf::Texture* t = nullptr, bool addTextureToList = false);
+	IRenderable(sf::Texture* t = nullptr);
 
 	virtual ~IRenderable();
 
-	void Clear();
+	void ClearRender();
 };

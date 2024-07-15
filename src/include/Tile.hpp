@@ -22,7 +22,6 @@ struct Tile
 	Tile(Type type);
 
 	static float MoveSpeed(Type type);
-
 	static sf::Image* Image(Type type);
 	friend class MapGenerator;
 private:

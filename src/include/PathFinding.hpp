@@ -40,19 +40,19 @@ namespace my
 
 		class PathFinding
 		{
-			std::unordered_set<Node*, NodePtrHash, NodePtrEqual> checked;
-			std::unordered_set<Node*, NodePtrHash, NodePtrEqual> awaits;
 
 			float distance(Vector2I a, Vector2I b);
 
 		public:
+			std::unordered_set<Node*, NodePtrHash, NodePtrEqual> checked;
+			std::unordered_set<Node*, NodePtrHash, NodePtrEqual> awaits;
 			PathFinding() = default;
 
 			void Clear();
 
 			~PathFinding();
 
-			Node* CalculatePath(Vector2I a, Vector2I b);
+			Node* CalculatePath(Vector2I a, Vector2I b, float mul);
 
 
 		};

@@ -17,5 +17,6 @@ public:
 		m_health{ health },
 		m_maxHealth{ health },
 		type{ type } {}
+	virtual ~IMineable() = default;
 	virtual int Mine(int damage) = 0;
 };

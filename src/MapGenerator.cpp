@@ -2,6 +2,7 @@
 #include <Engine.hpp>
 #include <Resources.hpp>
 #include <Deposit.hpp>
+#include <Building.hpp>
 
 MapGenerator::MapGenerator(Vector2I size, int textureSize) :
 	m_seed{ std::rand() },
@@ -12,7 +13,7 @@ MapGenerator::MapGenerator(Vector2I size, int textureSize) :
 	m_texturesSize{ textureSize }
 {
 	m_ground.resize(size.x * size.y);
-
+	m_objects.resize(size.x * size.y);
 	sf::Image map;
 	map.create(size.x * m_texturesSize, size.y * m_texturesSize, sf::Color::Red);
 
@@ -25,10 +26,21 @@ MapGenerator::MapGenerator(Vector2I size, int textureSize) :
 	sf::Image* rocky_surface = Tile::Image(Tile::Type::rocky_surface);
 	sf::Image* snow = Tile::Image(Tile::Type::snow);
 
-	sf::Texture* tree = Resources::Image(Resources::resource::wood);
-	sf::Texture* iron = Resources::Image(Resources::resource::iron);
-	sf::Texture* gold = Resources::Image(Resources::resource::gold);
-	sf::Texture* oil = Resources::Image(Resources::resource::oil);
+	sf::Image* treeIm = Resources::Image(Resources::resource::wood);
+	sf::Image* ironIm = Resources::Image(Resources::resource::iron);
+	sf::Image* goldIm = Resources::Image(Resources::resource::gold);
+	sf::Image* rockIm = Resources::Image(Resources::resource::rock);
+
+	sf::Texture* tree = new sf::Texture();
+	tree->loadFromImage(*treeIm);
+	sf::Texture* iron = new sf::Texture();
+	iron->loadFromImage(*ironIm);
+	sf::Texture* gold = new sf::Texture();
+	gold->loadFromImage(*goldIm);
+	sf::Texture* rockObj = new sf::Texture();
+	rockObj->loadFromImage(*rockIm, sf::IntRect(0, 0, m_texturesSize, m_texturesSize));
+
+	//sf::Texture* oil = Resources::Image(Resources::resource::oil);
 
 	//Диапазон данных: 0-1, тип float
 	//0 - низкая температура, 1 - высокая температура
@@ -111,7 +123,7 @@ MapGenerator::MapGenerator(Vector2I size, int textureSize) :
 	
 	sf::Texture* texture = new sf::Texture();
 	texture->loadFromImage(map);
-	m_groundObject = new GameObject(sf::Vector2f(0, 0), texture, true);
+	m_groundObject = new GameObject(sf::Vector2f(0, 0), texture);
 
 	Deposit* dep;
 	for (int y = 0; y < m_size.y; ++y)
@@ -130,10 +142,10 @@ MapGenerator::MapGenerator(Vector2I size, int textureSize) :
 				{
 					if (h >= 0.72f)
 						continue;
-					dep = new Deposit(pos, oil, 300, 30, Resources::resource::oil);
-					dep->render->setOrigin(8, 20);
-					m_objects.push_back(dep);
-					(m_ground[x + y * m_size.x])->speed *= Resources::MoveModification(Resources::resource::oil);
+					dep = new Deposit(pos, rockObj, 300, 30, Resources::resource::rock);
+					dep->render->setOrigin(8, 8);
+					m_objects[x + y * m_size.x] = dep;
+					(m_ground[x + y * m_size.x])->speed *= Resources::MoveModification(Resources::resource::rock);
 					continue;
 				}
 				if (b <= 0.4f)
@@ -145,13 +157,13 @@ MapGenerator::MapGenerator(Vector2I size, int textureSize) :
 					{
 						dep = new Deposit(pos, gold, 300, 30, Resources::resource::gold);
 						dep->render->setOrigin(8, 20);
-						m_objects.push_back(dep);
+						m_objects[x + y * m_size.x] = dep;
 						(m_ground[x + y * m_size.x])->speed *= Resources::MoveModification(Resources::resource::gold);
 						continue;
 					}
 					dep = new Deposit(pos, iron, 300, 30, Resources::resource::iron);
 					dep->render->setOrigin(8, 20);
-					m_objects.push_back(dep);
+					m_objects[x + y * m_size.x] = dep;
 					(m_ground[x + y * m_size.x])->speed *= Resources::MoveModification(Resources::resource::iron);
 					continue;
 				}
@@ -162,9 +174,9 @@ MapGenerator::MapGenerator(Vector2I size, int textureSize) :
 				{
 					if (h < 0.6f && h > 0.41f)
 					{
-						dep = new Deposit(pos, tree, 300, 30, Resources::resource::iron);
+						dep = new Deposit(pos, tree, 15, 5, Resources::resource::wood);
 						dep->render->setOrigin(8, 20);
-						m_objects.push_back(dep);
+						m_objects[x + y * m_size.x] = dep;
 						(m_ground[x + y * m_size.x])->speed *= Resources::MoveModification(Resources::resource::wood);
 					}
 				}
@@ -173,7 +185,18 @@ MapGenerator::MapGenerator(Vector2I size, int textureSize) :
 		}
 	}
 
-	delete water, soil, grass, sand, road, rock, rocky_surface, snow;
+	delete water;
+	delete soil;
+	delete grass;
+	delete sand;
+	delete road;
+	delete rock;
+	delete rocky_surface;
+	delete snow;
+	delete treeIm;
+	delete goldIm;
+	delete ironIm;
+	delete rockIm;
 }
 
 MapGenerator::~MapGenerator()
@@ -195,9 +218,28 @@ Tile* const MapGenerator::getTile(int x, int y)
 
 Tile* const MapGenerator::getTile(sf::Vector2i pos)
 {
-	if (pos.x < 0 || pos.y < 0 || pos.x >= m_size.x || pos.y >= m_size.y)
-		return nullptr;
-	return m_ground[pos.x + pos.y * m_size.x];
+	return getTile(pos.x, pos.y);
+}
+
+GameObject*& MapGenerator::getObj(int x, int y)
+{
+	GameObject* temp;
+	if (m_objects.empty())
+		return temp;
+	return m_objects[x + y * m_size.x];
+}
+
+GameObject*& MapGenerator::getObj(sf::Vector2i pos)
+{
+	return getObj(pos.x, pos.y);
+}
+
+bool MapGenerator::IsBuilding(int x, int y)
+{
+	GameObject* obj = getObj(x, y);
+	if (obj == nullptr)
+		return false;
+	return dynamic_cast<Building::Wall*>(obj) || dynamic_cast<Building::WorkStation*>(obj);
 }
 
 const Vector2I& MapGenerator::getSize()

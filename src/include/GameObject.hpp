@@ -13,7 +13,7 @@ public:
 	
 	GameObject();
 
-	GameObject(const sf::Vector2f position, sf::Texture* texture, bool addTextureToRemoveList = false);
+	GameObject(const sf::Vector2f position, sf::Texture* texture);
 
 	GameObject(const GameObject& other);
 
@@ -23,11 +23,5 @@ public:
 	void Start() override {}
 
 	~GameObject() override = default;
-
-	void SetScale(Vector2& scale);
-	void SetScale(float x, float y);
-
-	void SetPosition(Vector2& pos);
-	void SetPosition(float x, float y);
 
 };

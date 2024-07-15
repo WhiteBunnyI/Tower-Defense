@@ -26,13 +26,15 @@ private:
 	void checkCollisions(BoxCollider* collider, std::list<BaseCollider*>& where_check, std::list<BaseCollider*>& saveTo);
 	void checkCollisions(CircleCollider* collider, std::list<BaseCollider*>& where_check, std::list<BaseCollider*>& saveTo);
 
-
 public:
 	Collision() = default;
 	Collision(sf::Vector2i gridSize, sf::Vector2i mapSize);
 
 	void UpdateCollider(BoxCollider* collider);
 	void UpdateCollider(CircleCollider* collider);
+
+	void RemoveCollider(BoxCollider* collider);
+	void RemoveCollider(CircleCollider* collider);
 
 	//¬озращ€ет список со всеми столкновени€ми
 	const std::list<BaseCollider*> getCollisions(BoxCollider* collider);
@@ -49,11 +51,11 @@ public:
 	{
 		GameObject* object;
 		sf::Vector2f center;
-
-		BaseCollider() : object{ nullptr }, center{} {}
+		bool isTrigger;
+		BaseCollider() : object{ nullptr }, center{}, isTrigger{ false } {}
 		virtual ~BaseCollider() = default;
 
-		BaseCollider(GameObject* obj, sf::Vector2f center) : center{ center }, object{ obj }
+		BaseCollider(GameObject* obj, sf::Vector2f center, bool isTrigger = false) : center{ center }, object{ obj }, isTrigger{ isTrigger }
 		{
 		
 		}
@@ -95,10 +97,9 @@ public:
 		sf::CircleShape* c;
 #endif // DEBUG_COLLISION
 
-
 		CircleCollider() = default;
-
-		CircleCollider(GameObject* obj, sf::Vector2f center, float radius, bool isTempCollider = false);
+		~CircleCollider() override;
+		CircleCollider(GameObject* obj, sf::Vector2f center, float radius, bool isTrigger = false, bool isTempCollider = false);
 		void Update(sf::Vector2f center);
 	};
 };

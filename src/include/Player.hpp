@@ -5,33 +5,42 @@
 #include <Input.hpp>
 #include <Resources.hpp>
 #include <Collision.hpp>
+#include <IDamageable.hpp>
+#include <Keep.hpp>
+#include <unordered_set>
+#include <Building.hpp>
 
-class Player : public GameObject
+class Player : public GameObject, public IHittable
 {
-	enum class Tools
-	{
-		sword,
-		pickaxe,
-		axe,
-	};
-
 	float speed;
 	float sprintMultiple;
 	
 	Camera m_camera;
 	Input* input;
+
+	BuildSystem m_buildSystem;
+	BuildSystem::Buildings typeOfBuilding = BuildSystem::Buildings::wall_1;
+	bool isBuilding;
+
 	GameObject sword;
 	GameObject pickaxe;
 	GameObject axe;
-	GameObject statue;
 	GameObject* currentToolObj;
-	Tools currentTool;
-	Collision::CircleCollider playerCollider;
-	Collision::CircleCollider attackCollider;
-	sf::Vector2f defaultToolPos;
-	//sf::CircleShape* colliderShape;
 
-	Resources resources;
+	Collision::CircleCollider playerCollider;
+	Collision::CircleCollider attackTrigger;
+	sf::Vector2f defaultToolPos;
+
+	sf::Text* resourcesUI;
+
+	sf::RectangleShape* ui_w_1;
+	sf::RectangleShape* ui_w_2;
+	sf::RectangleShape* ui_w_3;
+	sf::RectangleShape* ui_keep;
+	sf::RectangleShape* ui_cave;
+	sf::RectangleShape* ui_lumber;
+	sf::RectangleShape* ui_archerBarrack;
+	sf::RectangleShape* ui_archer;
 
 	//Attack settings
 	const float attackDur;
@@ -40,17 +49,24 @@ class Player : public GameObject
 	bool isAttack;
 	float attackTimer;
 	float attackAngle;
+	std::unordered_set<GameObject*> attackObj;
 
 public:
+	Resources resource;
+
 	Player(float speed, float sprintMultiple);
 	Player(const Player& other) = delete;
 	Player& operator=(const Player& other) = delete;
-	~Player() override = default;
+	~Player() override;
 
 	void ChangeTool();
 	void Attack();
 	void Move();
+	void UI();
+	bool Hit(int damage) override;
 
 	void Update() override;
 	void Start() override;
+
+	const BuildSystem& getBuildSystem();
 };

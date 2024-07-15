@@ -28,7 +28,7 @@ public:
 	int m_gameWidth; 
 	int m_gameHeight;
 
-	my::ThreadPool threadPool;
+	my::ThreadPool* threadPool;
 	Collision* m_collision;
 	Input* m_input;
 

@@ -42,11 +42,13 @@ int main()
 	temp.saveToFile("./TempMap.png");
 	deposits.saveToFile("./DepositMap.png");
 
-	Player player(120, 2);
+	Player player(2, 2);
 	singleton.player = &player;
 	sf::Texture* enemyTexture = new sf::Texture();
-	enemyTexture->loadFromFile("./resources/MiniWorldSprites/Characters/Monsters/Slimes");
-	Enemy enemy(player.render->getPosition() - sf::Vector2f(32, 0), enemyTexture);
+	sf::Image enemyImage;
+	enemyImage.loadFromFile("./resources/MiniWorldSprites/Characters/Monsters/Undead/Skeleton-Soldier.png");
+	enemyTexture->loadFromImage(enemyImage, sf::IntRect(16, 0, 16, 16));
+	Enemy* enemy = new Enemy(player.render->getPosition() - sf::Vector2f(32, 0), enemyTexture, 50, 5, 2, 1);
 
 	engine.CrankUp();
 

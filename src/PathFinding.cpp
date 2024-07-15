@@ -34,7 +34,7 @@ float my::pathFinding::PathFinding::distance(Vector2I a, Vector2I b)
 {
 	float x = b.x - a.x;
 	float y = b.y - a.y;
-	return std::sqrtf(x * x + y * y);
+	return std::sqrtf(x * x + y * y) * 10;
 }
 
 void my::pathFinding::PathFinding::Clear()
@@ -57,7 +57,7 @@ my::pathFinding::PathFinding::~PathFinding()
 	Clear();
 }
 
-my::pathFinding::Node* my::pathFinding::PathFinding::CalculatePath(Vector2I a, Vector2I b)
+my::pathFinding::Node* my::pathFinding::PathFinding::CalculatePath(Vector2I a, Vector2I b, float mul)
 {
 	Clear();
 	MapGenerator* map = Singleton::instance->map;
@@ -98,12 +98,13 @@ my::pathFinding::Node* my::pathFinding::PathFinding::CalculatePath(Vector2I a, V
 
 				//Игнорим объекты, по которым нельзя ходить
 				Tile* tile = map->getTile(_x, _y);
+
 				if (tile->speed == 0)
 					continue;
-
+				bool isEmpty = !(map->IsBuilding(_x, _y));
 				Node* node = new Node();
 				node->pos = Vector2I(_x, _y);
-				node->g = current->g + distance(current->pos, node->pos) * 10.f * (2.f - tile->speed);
+				node->g = current->g + distance(current->pos, node->pos) * (2.f - tile->speed * isEmpty) * mul;
 				node->h = distance(node->pos, b);
 				node->parent = current;
 				node->calculate();

@@ -42,7 +42,6 @@ namespace my
 		}
 	};
 
-
 	class ThreadHolder : public BaseThreadDataHolder
 	{
 		std::function<void()> task;
@@ -67,6 +66,7 @@ namespace my
 
 		std::mutex queue_mutex;
 		std::condition_variable condition;
+		friend class Engine;
 
 	public:
 		ThreadPool(size_t num_threads) : stop{ false }
@@ -108,7 +108,7 @@ namespace my
 			return holder->getFuture();
 		}
 
-		void enqueue(void(*task)())
+		void enqueue(std::function<void()> task)
 		{
 			ThreadHolder* holder = new ThreadHolder(task);
 			{
@@ -130,7 +130,6 @@ namespace my
 					if (stop) return;
 					holder = tasks.front();
 					tasks.pop();
-					std::cout << "Execute thread: " << id << std::endl;
 				}
 				holder->Execute();
 				delete holder;

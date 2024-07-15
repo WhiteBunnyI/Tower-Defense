@@ -1,9 +1,12 @@
 #pragma once
 
-class IDamageable
+class IHittable
 {
 protected:
 	int m_health;
 public:
-	virtual void Damage(int damage) = 0;
+	IHittable(int health) : m_health{ health } {}
+	virtual ~IHittable() = default;
+	//true - is dead
+	virtual bool Hit(int damage) = 0;
 };
