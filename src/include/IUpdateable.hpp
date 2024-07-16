@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 struct IUpdateable
 {
 	IUpdateable();
