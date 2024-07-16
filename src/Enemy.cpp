@@ -24,13 +24,6 @@ Enemy::Enemy(const sf::Vector2f position, sf::Texture* texture, int health, int 
 	render->setOrigin(8, 8);
 }
 
-Enemy::~Enemy()
-{
-	while (isCalculatingPath)
-	{
-
-	}
-}
 
 void Enemy::Start()
 {
@@ -195,7 +188,7 @@ void Enemy::Update()
 			if(std::sqrt(dist.x*dist.x + dist.y*dist.y) <= 35)
 				temp = finder.CalculatePath(current, Vector2I(playerPos.x, playerPos.y), 1);
 			else
-				temp = finder.CalculatePath(current, Vector2I(playerPos.x, playerPos.y), 0.75f);
+				temp = finder.CalculatePath(current, Vector2I(playerPos.x, playerPos.y), 0.5f);
 
 			std::forward_list<sf::Vector2i> lst;
 			if (temp != nullptr)

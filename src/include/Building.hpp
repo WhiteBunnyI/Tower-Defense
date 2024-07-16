@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <GameObject.hpp>
-#include <IDamageable.hpp>
+#include <IHittable.hpp>
 #include <Resources.hpp>
 #include <unordered_map>
 #include <Collision.hpp>

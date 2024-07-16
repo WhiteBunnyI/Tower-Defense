@@ -1,6 +1,6 @@
 #pragma once
 
-#include <IDamageable.hpp>
+#include <IHittable.hpp>
 #include <GameObject.hpp>
 #include <PathFinding.hpp>
 #include <mutex>
@@ -42,7 +42,7 @@ class Enemy : public GameObject, public IHittable, public ILateUpdateable
 
 public:
 	Enemy(const sf::Vector2f position, sf::Texture* texture, int health, int damage, float moveSpeed, float attackCooldown);
-	~Enemy() override;
+	~Enemy() override = default;
 	void Update() override;
 	void Start() override;
 	void LateUpdate() override;

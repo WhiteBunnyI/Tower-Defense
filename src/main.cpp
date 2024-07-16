@@ -6,6 +6,7 @@
 #include <PathFinding.hpp>
 #include <Player.hpp>
 #include <Enemy.hpp>
+#include <Waves.hpp>
 
 sf::Image NoiseToImage(my::Noise_Output& noise)
 {
@@ -29,10 +30,13 @@ int main()
 {
 	setlocale(LC_ALL, "rus");
 	std::srand(time(0));
-	Engine engine(800, 600, sf::Vector2i(20, 20), sf::Vector2i(200 * 16, 200 * 16));
+
+	int mapSize = 100;
+
+	Engine engine(800, 600, sf::Vector2i(20, 20), sf::Vector2i(mapSize * 16, mapSize * 16));
 
 	Singleton singleton;
-	MapGenerator map(Vector2I(200, 200), 16);
+	MapGenerator map(Vector2I(mapSize, mapSize), 16);
 	singleton.map = &map;
 
 	sf::Image height(NoiseToImage(map.getDataHeight()));
@@ -44,11 +48,8 @@ int main()
 
 	Player player(2, 2);
 	singleton.player = &player;
-	sf::Texture* enemyTexture = new sf::Texture();
-	sf::Image enemyImage;
-	enemyImage.loadFromFile("./resources/MiniWorldSprites/Characters/Monsters/Undead/Skeleton-Soldier.png");
-	enemyTexture->loadFromImage(enemyImage, sf::IntRect(16, 0, 16, 16));
-	Enemy* enemy = new Enemy(player.render->getPosition() - sf::Vector2f(32, 0), enemyTexture, 50, 5, 2, 1);
+	
+	Waves waves;
 
 	engine.CrankUp();
 

@@ -222,7 +222,7 @@ void Collision::checkCollisions(CircleCollider* collider, std::list<BaseCollider
 	}
 }
 
-const std::list<Collision::BaseCollider*> Collision::getCollisions(BoxCollider* collider)
+std::list<Collision::BaseCollider*> Collision::getCollisions(BoxCollider* collider)
 {
 	std::list<BaseCollider*> result;
 
@@ -257,7 +257,7 @@ const std::list<Collision::BaseCollider*> Collision::getCollisions(BoxCollider* 
 	return result;
 }
 
-const std::list<Collision::BaseCollider*> Collision::getCollisions(CircleCollider* collider)
+std::list<Collision::BaseCollider*> Collision::getCollisions(CircleCollider* collider)
 {
 	std::list<BaseCollider*> result;
 

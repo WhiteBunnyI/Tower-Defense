@@ -36,9 +36,9 @@ public:
 	void RemoveCollider(BoxCollider* collider);
 	void RemoveCollider(CircleCollider* collider);
 
-	//Возращяет список со всеми столкновениями
-	const std::list<BaseCollider*> getCollisions(BoxCollider* collider);
-	const std::list<BaseCollider*> getCollisions(CircleCollider* collider);
+	//В¬РѕР·СЂР°С‰В¤РµС‚ СЃРїРёСЃРѕРє СЃРѕ РІСЃРµРјРё СЃС‚РѕР»РєРЅРѕРІРµРЅРёВ¤РјРё
+	std::list<BaseCollider*> getCollisions(BoxCollider* collider);
+	std::list<BaseCollider*> getCollisions(CircleCollider* collider);
 
 	bool CheckCollision(const CircleCollider* circle, const BoxCollider* box);
 	bool CheckCollision(const BoxCollider* box1, const BoxCollider* box2);

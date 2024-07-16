@@ -2,7 +2,7 @@
 
 #include <GameObject.hpp>
 #include <Collision.hpp>
-#include <IDamageable.hpp>
+#include <IHittable.hpp>
 
 class Keep : public GameObject, public IHittable
 {

@@ -5,7 +5,7 @@
 #include <Input.hpp>
 #include <Resources.hpp>
 #include <Collision.hpp>
-#include <IDamageable.hpp>
+#include <IHittable.hpp>
 #include <Keep.hpp>
 #include <unordered_set>
 #include <Building.hpp>
@@ -30,7 +30,8 @@ class Player : public GameObject, public IHittable
 	Collision::CircleCollider playerCollider;
 	Collision::CircleCollider attackTrigger;
 	sf::Vector2f defaultToolPos;
-
+	
+	//UI
 	sf::Text* resourcesUI;
 
 	sf::RectangleShape* ui_w_1;
