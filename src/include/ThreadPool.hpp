@@ -47,7 +47,7 @@ namespace my
 		std::function<void()> task;
 	
 	public:
-		ThreadHolder(std::function<void()> task) : task(task)
+		ThreadHolder(std::function<void()>& task) : task(task)
 		{
 	
 		}

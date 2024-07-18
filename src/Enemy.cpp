@@ -22,6 +22,37 @@ Enemy::Enemy(const sf::Vector2f position, sf::Texture* texture, int health, int 
 	damage{ damage }
 {
 	render->setOrigin(8, 8);
+	calculateFunc = [this]()
+		{
+			Vector2I current;
+			if (currentPosTarget.x > -1 && currentPosTarget.y > -1)
+				current = Vector2I(currentPosTarget.x, currentPosTarget.y);
+			else
+				current = Vector2I(currentPos.x, currentPos.y);
+
+			Node* temp;
+			sf::Vector2f dist(playerPos.x - current.x, playerPos.y - current.y);
+
+			if (std::sqrt(dist.x * dist.x + dist.y * dist.y) <= 35)
+				temp = finder.CalculatePath(current, Vector2I(playerPos.x, playerPos.y), 1);
+			else
+				temp = finder.CalculatePath(current, Vector2I(playerPos.x, playerPos.y), 0.5f);
+
+			std::forward_list<sf::Vector2i> lst;
+			if (temp != nullptr)
+			{
+				while (temp->parent != nullptr)
+				{
+					lst.push_front(sf::Vector2i(temp->pos.x, temp->pos.y));
+					temp = temp->parent;
+				}
+			}
+			{
+				std::unique_lock<std::mutex> lock(m);
+				isCalculatingPath = false;
+				std::swap(lst, path);
+			}
+		};
 }
 
 
@@ -136,6 +167,7 @@ void Enemy::Attack(int x, int y)
 
 void Enemy::Update()
 {
+	sf::Clock clock;
 	if (isDead)
 		return;
 
@@ -174,38 +206,6 @@ void Enemy::Update()
 		moveTimer += Engine::instance->deltaTime * tileSpeed * speed;
 	}
 
-	auto func = [this]()
-		{
-			Vector2I current;
-			if (currentPosTarget.x > -1 && currentPosTarget.y > -1)
-				current = Vector2I(currentPosTarget.x, currentPosTarget.y);
-			else
-				current = Vector2I(currentPos.x, currentPos.y);
-
-			Node* temp;
-			sf::Vector2f dist(playerPos.x - current.x, playerPos.y - current.y);
-
-			if(std::sqrt(dist.x*dist.x + dist.y*dist.y) <= 35)
-				temp = finder.CalculatePath(current, Vector2I(playerPos.x, playerPos.y), 1);
-			else
-				temp = finder.CalculatePath(current, Vector2I(playerPos.x, playerPos.y), 0.5f);
-
-			std::forward_list<sf::Vector2i> lst;
-			if (temp != nullptr)
-			{
-				while (temp->parent != nullptr)
-				{
-					lst.push_front(sf::Vector2i(temp->pos.x, temp->pos.y));
-					temp = temp->parent;
-				}
-			}
-			{
-				std::unique_lock<std::mutex> lock(m);
-				isCalculatingPath = false;
-				std::swap(lst, path);
-			}
-		};
-
 	if (!isCalculatingPath)
 	{
 		sf::Vector2f playerPosInGrid;
@@ -219,13 +219,13 @@ void Enemy::Update()
 			currentPos = map->CoordsToGridCoords(render->getPosition());
 			playerPos = playerPosInGrid;
 			isCalculatingPath = true;
-			Engine::instance->threadPool->enqueue(func);
+			//Engine::instance->threadPool->enqueue(calculateFunc);
+			calculateFunc();
 		}
 	}
-
 	collider.Update(render->getPosition());
 	attackTrigger.Update(collider.center);
-
+	std::cout << "Time: " << clock.getElapsedTime().asSeconds() << std::endl;
 }
 
 void Enemy::LateUpdate()

@@ -31,7 +31,7 @@ int main()
 	setlocale(LC_ALL, "rus");
 	std::srand(time(0));
 
-	int mapSize = 100;
+	int mapSize = 200;
 
 	Engine engine(800, 600, sf::Vector2i(20, 20), sf::Vector2i(mapSize * 16, mapSize * 16));
 

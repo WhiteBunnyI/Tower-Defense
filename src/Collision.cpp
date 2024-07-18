@@ -148,6 +148,8 @@ void Collision::UpdateCollider(CircleCollider* collider)
 	std::list<BaseCollider*>& l = getList(gridPos);
 	l.remove(collider);
 	l.push_back(collider);
+	std::list<BaseCollider*>& l1 = getList(gridPos);
+
 	for (int _y = -1; _y < 2; ++_y)
 	{
 		for (int _x = -1; _x < 2; ++_x)
@@ -159,7 +161,7 @@ void Collision::UpdateCollider(CircleCollider* collider)
 				(otherGrid.y >= 0 && otherGrid.y < gridSize.y))
 			{
 				BoxCollider gridCollider(nullptr, sf::Vector2f(otherGrid.x * sizeX + sizeX / 2.f, otherGrid.y * sizeY + sizeY / 2.f), sf::Vector2f(sizeX / 2, sizeY / 2), true);
-				auto lst = getList(otherGrid);
+				std::list<BaseCollider*>& lst = getList(otherGrid);
 				lst.remove(collider);
 				if (CheckCollision(collider, &gridCollider))
 				{
@@ -172,7 +174,7 @@ void Collision::UpdateCollider(CircleCollider* collider)
 
 }
 
-void Collision::RemoveCollider(CircleCollider* collider)
+void Collision::RemoveCollider(BaseCollider* collider)
 {
 	int sizeX = mapSize.x / gridSize.x;
 	int sizeY = mapSize.y / gridSize.y;
@@ -189,7 +191,7 @@ void Collision::RemoveCollider(CircleCollider* collider)
 			if ((otherGrid.x >= 0 && otherGrid.x < gridSize.x) &&
 				(otherGrid.y >= 0 && otherGrid.y < gridSize.y))
 			{
-				auto lst = getList(otherGrid);
+				std::list<BaseCollider*>& lst = getList(otherGrid);
 				lst.remove(collider);
 			}
 		}

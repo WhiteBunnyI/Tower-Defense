@@ -89,7 +89,6 @@ void Engine::CrankUp()
 		if (isPlaying)
 		{
 			deltaTime = clock.restart().asSeconds();
-
 			//Coroutines Invoke
 			for (auto iterCoroutine = m_coroutines.begin(); iterCoroutine != m_coroutines.end(); ++iterCoroutine)
 			{

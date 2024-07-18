@@ -1,7 +1,7 @@
 #pragma once
 
 #include <GameObject.hpp>
-#include <IDamageable.hpp>
+#include <IHittable.hpp>
 #include <Vector2.hpp>
 #include <IMovable.hpp>
 #include <IPlaceable.hpp>

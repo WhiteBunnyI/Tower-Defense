@@ -5,7 +5,7 @@
 #include <vector>
 #include <GameObject.hpp>
 
-#define DEBUG_COLLISION
+//#define DEBUG_COLLISION
 
 
 
@@ -33,8 +33,7 @@ public:
 	void UpdateCollider(BoxCollider* collider);
 	void UpdateCollider(CircleCollider* collider);
 
-	void RemoveCollider(BoxCollider* collider);
-	void RemoveCollider(CircleCollider* collider);
+	void RemoveCollider(BaseCollider* collider);
 
 	//¬озращ¤ет список со всеми столкновени¤ми
 	std::list<BaseCollider*> getCollisions(BoxCollider* collider);
@@ -73,6 +72,11 @@ public:
 		{
 			if(!isTempCollider)
 				Collision::instance->UpdateCollider(this);
+		}
+
+		~BoxCollider() override
+		{
+			Collision::instance->RemoveCollider(this);
 		}
 
 		void Update(sf::Vector2f center, float angle)

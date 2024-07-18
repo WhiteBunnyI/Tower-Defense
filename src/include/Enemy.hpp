@@ -33,6 +33,8 @@ class Enemy : public GameObject, public IHittable, public ILateUpdateable
 	Collision::CircleCollider collider;
 	Collision::CircleCollider attackTrigger;
 
+	std::function<void()> calculateFunc;
+
 #ifdef DEBUG_PATHFINDING
 
 	std::list<sf::Drawable*> tempList;
