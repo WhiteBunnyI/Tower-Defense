@@ -167,7 +167,6 @@ void Enemy::Attack(int x, int y)
 
 void Enemy::Update()
 {
-	sf::Clock clock;
 	if (isDead)
 		return;
 
@@ -177,7 +176,7 @@ void Enemy::Update()
 	
 	attackTimer -= Engine::instance->deltaTime;
 	Attack();
-	if (currentPosTarget == sf::Vector2i(-1, -1) || moveTimer >= 1)
+	if (!isCalculatingPath && currentPosTarget == sf::Vector2i(-1, -1) || moveTimer >= 1)
 	{
 		std::unique_lock<std::mutex> lock(m);
 		if (!path.empty())
@@ -206,6 +205,16 @@ void Enemy::Update()
 		moveTimer += Engine::instance->deltaTime * tileSpeed * speed;
 	}
 
+	std::function<void()> customFunc = [this]()
+		{
+			std::this_thread::sleep_for(std::chrono::microseconds(200));
+			std::cout << "End\n";
+			{
+				std::unique_lock<std::mutex> lock(m);
+				isCalculatingPath = false;
+			}
+		};
+
 	if (!isCalculatingPath)
 	{
 		sf::Vector2f playerPosInGrid;
@@ -219,13 +228,13 @@ void Enemy::Update()
 			currentPos = map->CoordsToGridCoords(render->getPosition());
 			playerPos = playerPosInGrid;
 			isCalculatingPath = true;
-			//Engine::instance->threadPool->enqueue(calculateFunc);
-			calculateFunc();
+			//Engine::instance->threadPool->enqueue(customFunc);
+			Engine::instance->threadPool->enqueue(calculateFunc);
+			//calculateFunc();
 		}
 	}
 	collider.Update(render->getPosition());
 	attackTrigger.Update(collider.center);
-	std::cout << "Time: " << clock.getElapsedTime().asSeconds() << std::endl;
 }
 
 void Enemy::LateUpdate()

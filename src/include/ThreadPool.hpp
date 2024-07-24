@@ -7,6 +7,7 @@
 #include <vector>
 #include <functional>
 #include <future>
+#include <Windows.h>
 
 namespace my
 {

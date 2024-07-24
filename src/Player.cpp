@@ -169,6 +169,7 @@ void Player::Update()
 	playerCollider.Update(render->getPosition());
 	
 	UI();
+	std::cout << " FPS: " << 1.f / Engine::instance->deltaTime << std::endl;
 }
 
 bool CheckUI(sf::RectangleShape* shape, sf::Vector2f mousePos)

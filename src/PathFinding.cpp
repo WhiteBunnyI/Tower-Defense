@@ -118,12 +118,25 @@ my::pathFinding::Node* my::pathFinding::PathFinding::CalculatePath(Vector2I a, V
 		if (awaits.size() == 0)
 			break;
 
-		current = *(awaits.begin());
+		/*current = *(awaits.begin());
 
 		for (auto p = awaits.begin(); p != awaits.end(); ++p)
 		{
 			if (current->f > (*p)->f)
 				current = (*p);
+		}*/
+
+		auto p = awaits.begin();
+		auto end = *(--awaits.end());
+		current = *(p);
+		for (int i = 0; i < Singleton::instance->map->getSize().x * Singleton::instance->map->getSize().y / 10; ++i)
+		{
+			if (current->f > (*p)->f)
+				current = (*p);
+
+			if (*p == end)
+				break;
+			++p;
 		}
 
 		//Убираем из сета клеток, ожидающих проверку
