@@ -50,6 +50,21 @@ public:
 		return *this;
 	}
 
+	void AddResources(resource type, unsigned int count)
+	{
+		resources[type] += count;
+	}
+	/// Возращяет true, если на данную операцию хватает ресурсов
+	bool RemoveResources(resource type, unsigned int count)
+	{
+		if (resources[type] - count >= 0)
+		{
+			resources[type] -= count;
+			return true;
+		}
+		resources[type] += count;
+	}
+
 	static sf::Image* Image(resource type)
 	{
 		sf::Image* result = new sf::Image();

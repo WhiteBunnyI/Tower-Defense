@@ -165,6 +165,11 @@ void Enemy::Attack(int x, int y)
 	}
 }
 
+void Enemy::Move()
+{
+
+}
+
 void Enemy::Update()
 {
 	if (isDead)
@@ -205,15 +210,15 @@ void Enemy::Update()
 		moveTimer += Engine::instance->deltaTime * tileSpeed * speed;
 	}
 
-	std::function<void()> customFunc = [this]()
-		{
-			std::this_thread::sleep_for(std::chrono::microseconds(200));
-			std::cout << "End\n";
-			{
-				std::unique_lock<std::mutex> lock(m);
-				isCalculatingPath = false;
-			}
-		};
+	//std::function<void()> customFunc = [this]()
+	//	{
+	//		std::this_thread::sleep_for(std::chrono::microseconds(200));
+	//		std::cout << "End\n";
+	//		{
+	//			std::unique_lock<std::mutex> lock(m);
+	//			isCalculatingPath = false;
+	//		}
+	//	};
 
 	if (!isCalculatingPath)
 	{

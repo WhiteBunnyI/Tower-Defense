@@ -51,4 +51,5 @@ public:
 	bool Hit(int damage) override;
 	void Attack();
 	void Attack(int x, int y);
+	void Move();
 };
