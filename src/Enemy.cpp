@@ -53,6 +53,8 @@ Enemy::Enemy(const sf::Vector2f position, sf::Texture* texture, int health, int 
 				std::swap(lst, path);
 			}
 		};
+	map = Singleton::instance->map;
+	player = Singleton::instance->player;
 }
 
 
@@ -167,20 +169,6 @@ void Enemy::Attack(int x, int y)
 
 void Enemy::Move()
 {
-
-}
-
-void Enemy::Update()
-{
-	if (isDead)
-		return;
-
-	MapGenerator* map = Singleton::instance->map;
-	Player* player = Singleton::instance->player;
-
-	
-	attackTimer -= Engine::instance->deltaTime;
-	Attack();
 	if (!isCalculatingPath && currentPosTarget == sf::Vector2i(-1, -1) || moveTimer >= 1)
 	{
 		std::unique_lock<std::mutex> lock(m);
@@ -209,6 +197,17 @@ void Enemy::Update()
 
 		moveTimer += Engine::instance->deltaTime * tileSpeed * speed;
 	}
+}
+
+void Enemy::Update()
+{
+	if (isDead)
+		return;
+
+	
+	attackTimer -= Engine::instance->deltaTime;
+	Attack();
+	Move();
 
 	//std::function<void()> customFunc = [this]()
 	//	{

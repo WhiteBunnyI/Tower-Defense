@@ -2,7 +2,7 @@
 #include <Engine.hpp>
 #include <Enemy.hpp>
 
-Waves::Waves() : IUpdateable(), currentCount{15}, timer{3}
+Waves::Waves() : IUpdateable(), currentCount{60}, timer{3}
 {
 	enemyTexture = new sf::Texture();
 	sf::Image enemyImage;

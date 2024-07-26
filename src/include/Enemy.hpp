@@ -35,6 +35,8 @@ class Enemy : public GameObject, public IHittable, public ILateUpdateable
 
 	std::function<void()> calculateFunc;
 
+	MapGenerator* map = nullptr;
+	Player* player = nullptr;
 #ifdef DEBUG_PATHFINDING
 
 	std::list<sf::Drawable*> tempList;

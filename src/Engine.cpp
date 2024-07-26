@@ -7,7 +7,7 @@ Engine::Engine(int gameWidth, int gameHeight, sf::Vector2i gridSizeCollision, sf
 	m_window{ new sf::RenderWindow(sf::VideoMode(static_cast<unsigned int>(m_gameWidth), static_cast<unsigned int>(m_gameHeight), 32), "Tower Defense",
 		sf::Style::Titlebar | sf::Style::Close) },
 	deltaTime{ 0 },
-	threadPool{ new my::ThreadPool(2)}
+	threadPool{ new my::ThreadPool(1)}
 {
 	std::cout << "Start " << threadPool->workers.size() << " threads" << std::endl;
 	if (Engine::instance != nullptr)
