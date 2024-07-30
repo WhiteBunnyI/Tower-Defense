@@ -18,7 +18,7 @@ Player::Player(float speed, float sprintMultiple) :
 	input{ Engine::instance->m_input },
 	currentToolObj{ &sword },
 	attackRadius{ 1.f * Singleton::instance->map->m_texturesSize },
-	isAttack{ false },
+	isAttacking{ false },
 	attackDur{ 0.25f },
 	attackTimer{ 0 },
 	attackAngle{ 0 },
@@ -77,7 +77,6 @@ Player::Player(float speed, float sprintMultiple) :
 	ui_lumber = new sf::RectangleShape();
 	ui_archerBarrack = new sf::RectangleShape();
 	ui_archer = new sf::RectangleShape();
-
 
 	Engine::instance->m_manualRender.push_back(ui_w_1);
 	Engine::instance->m_manualRender.push_back(ui_w_2);
@@ -148,7 +147,7 @@ void Player::Update()
 	{
 		Move();
 		Attack();
-		if (!isAttack)
+		if (!isAttacking)
 		{
 			ChangeTool();
 		}
@@ -303,9 +302,9 @@ void Player::Attack()
 	//Начало атаки
 	if (input->isPressed(sf::Mouse::Left))
 	{
-		if (!isAttack)
+		if (!isAttacking)
 		{
-			isAttack = true;
+			isAttacking = true;
 			attackTimer = 0;
 			sf::Vector2f AB = input->getMousePosInWorld() - render->getPosition();
 
@@ -326,12 +325,12 @@ void Player::Attack()
 		}
 
 	}
-	if (isAttack)
+	if (isAttacking)
 	{
 		//Конец атаки
 		if (attackTimer >= 1.f)
 		{
-			isAttack = false;
+			isAttacking = false;
 			currentToolObj->render->setPosition(render->getPosition() + defaultToolPos);
 			currentToolObj->render->setRotation(35);
 			attackObj.clear();

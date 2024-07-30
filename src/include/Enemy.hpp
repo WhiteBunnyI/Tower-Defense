@@ -43,13 +43,15 @@ class Enemy : public GameObject, public IHittable, public ILateUpdateable
 
 #endif // DEBUG_PATHFINDING
 
+protected:
+
+	void Update() override;
+	void Start() override;
+	void LateUpdate() override;
 
 public:
 	Enemy(const sf::Vector2f position, sf::Texture* texture, int health, int damage, float moveSpeed, float attackCooldown);
 	~Enemy() override = default;
-	void Update() override;
-	void Start() override;
-	void LateUpdate() override;
 	bool Hit(int damage) override;
 	void Attack();
 	void Attack(int x, int y);

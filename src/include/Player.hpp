@@ -32,6 +32,7 @@ class Player : public GameObject, public IHittable
 	sf::Vector2f defaultToolPos;
 	
 	//UI
+
 	sf::Text* resourcesUI;
 
 	sf::RectangleShape* ui_w_1;
@@ -44,13 +45,20 @@ class Player : public GameObject, public IHittable
 	sf::RectangleShape* ui_archer;
 
 	//Attack settings
+
 	const float attackDur;
 	const float attackRadius;
+
 	//Attack variables
-	bool isAttack;
+
+	bool isAttacking;
 	float attackTimer;
 	float attackAngle;
 	std::unordered_set<GameObject*> attackObj;
+protected:
+
+	void Update() override;
+	void Start() override;
 
 public:
 	Resources resource;
@@ -65,9 +73,6 @@ public:
 	void Move();
 	void UI();
 	bool Hit(int damage) override;
-
-	void Update() override;
-	void Start() override;
 
 	const BuildSystem& getBuildSystem();
 };

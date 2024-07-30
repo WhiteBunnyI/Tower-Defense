@@ -9,6 +9,11 @@ class GameObject : public IUpdateable, public IStartable, public IRenderable
 {
 	friend class Engine;
 
+protected:
+
+	void Update() override {}
+	void Start() override {}
+
 public:
 	
 	GameObject();
@@ -18,9 +23,6 @@ public:
 	GameObject(const GameObject& other);
 
 	GameObject& operator=(const GameObject& other);
-
-	void Update() override {}
-	void Start() override {}
 
 	~GameObject() override = default;
 

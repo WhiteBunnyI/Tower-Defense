@@ -8,6 +8,8 @@
 #include <Enemy.hpp>
 #include <Waves.hpp>
 
+#include <memory>
+
 sf::Image NoiseToImage(my::Noise_Output& noise)
 {
 	sf::Image result;
@@ -25,6 +27,13 @@ sf::Image NoiseToImage(my::Noise_Output& noise)
 	return result;
 }
 
+struct Data
+{
+	float data1;
+	float data2;
+
+	Data(float d1, float d2) : data1{ d1 }, data2{ d2 } {}
+};
 
 int main()
 {
@@ -39,6 +48,13 @@ int main()
 	MapGenerator map(Vector2I(mapSize, mapSize), 16);
 	singleton.map = &map;
 
+	std::shared_ptr<Player> p1 = std::make_shared<Player>(3, 5);
+	std::cout << p1.use_count() << std::endl;
+	
+	std::shared_ptr<Player> p2 = std::make_shared<Player>(3, 7);
+	std::cout << p2.use_count() << std::endl;
+
+	return 0;
 	sf::Image height(NoiseToImage(map.getDataHeight()));
 	sf::Image temp(NoiseToImage(map.getDataTemp()));
 	sf::Image deposits(NoiseToImage(map.getDataDeposit()));

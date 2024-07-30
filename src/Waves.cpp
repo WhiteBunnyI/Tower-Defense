@@ -2,7 +2,7 @@
 #include <Engine.hpp>
 #include <Enemy.hpp>
 
-Waves::Waves() : IUpdateable(), currentCount{60}, timer{3}
+Waves::Waves() : IUpdateable(), currentCount{60}, timer{15}
 {
 	enemyTexture = new sf::Texture();
 	sf::Image enemyImage;
@@ -19,7 +19,8 @@ void Waves::Update()
 		int offset = std::sqrtf(currentCount);
 		for (int i = 0; i < currentCount; i++)
 		{
-			sf::Vector2f pos(offset / 2 + offset % (i+1), offset / 2 + offset / (i+1));
+			sf::Vector2f pos(i % offset, i / offset);
+			pos = Singleton::instance->map->GridCoordsToCenterCoords(pos.x, pos.y);
 			Enemy* enemy = new Enemy(pos, enemyTexture, 50, 5, 3, 1.5f);
 		}
 
