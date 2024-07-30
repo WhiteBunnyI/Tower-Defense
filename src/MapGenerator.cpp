@@ -221,17 +221,33 @@ Tile* const MapGenerator::getTile(sf::Vector2i pos)
 	return getTile(pos.x, pos.y);
 }
 
-GameObject*& MapGenerator::getObj(int x, int y)
+GameObject* MapGenerator::getObj(int x, int y)
 {
-	GameObject* temp;
 	if (m_objects.empty())
-		return temp;
+		return nullptr;
 	return m_objects[x + y * m_size.x];
 }
 
-GameObject*& MapGenerator::getObj(sf::Vector2i pos)
+GameObject* MapGenerator::getObj(sf::Vector2i pos)
 {
 	return getObj(pos.x, pos.y);
+}
+
+void MapGenerator::setObj(int x, int y, GameObject* obj, bool cleanUp)
+{
+	if (m_objects.empty())
+		return;
+	std::swap(obj, m_objects[x + y * m_size.x]);
+	if (cleanUp && obj != nullptr)
+	{
+		delete obj;
+		obj = nullptr;
+	}
+}
+
+void MapGenerator::setObj(sf::Vector2i pos, GameObject* obj, bool cleanUp)
+{
+	setObj(pos.x, pos.y, obj, cleanUp);
 }
 
 bool MapGenerator::IsBuilding(int x, int y)

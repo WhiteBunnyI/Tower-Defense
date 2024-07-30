@@ -32,8 +32,11 @@ public:
 	Tile* const getTile(int x, int y);
 	Tile* const getTile(sf::Vector2i pos);
 
-	GameObject*& getObj(int x, int y);
-	GameObject*& getObj(sf::Vector2i pos);
+	GameObject* getObj(int x, int y);
+	GameObject* getObj(sf::Vector2i pos);
+
+	void setObj(int x, int y, GameObject* obj, bool cleanUp = true);
+	void setObj(sf::Vector2i pos, GameObject* obj, bool cleanUp = true);
 
 	bool IsBuilding(int x, int y);
 

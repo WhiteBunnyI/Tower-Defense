@@ -135,7 +135,7 @@ void Enemy::Attack()
 					if (d->Hit(damage))
 					{
 						auto p = Singleton::instance->map->CoordsToGridCoords(i->object->render->getPosition());
-						Singleton::instance->map->getObj(p.x, p.y) = nullptr;
+						Singleton::instance->map->setObj(p.x, p.y, nullptr);
 						delete d;
 					}
 				}
@@ -158,7 +158,7 @@ void Enemy::Attack(int x, int y)
 				attackTimer = attackCooldown;
 				if (d->Hit(damage))
 				{
-					Singleton::instance->map->getObj(x, y) = nullptr;
+					Singleton::instance->map->setObj(x, y, nullptr);
 					delete d;
 				}
 			}

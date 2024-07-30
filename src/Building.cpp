@@ -325,7 +325,6 @@ void BuildSystem::Build(sf::Vector2f pos, Buildings type, bool isBuild)
 			if (isBuild && p <= player->resource)
 			{
 				player->resource -= p;
-				Singleton::instance->map->getObj(pos.x, pos.y) = building;
 				building->render->setColor(sf::Color::White);
 
 				if (Building::WorkStation* station = dynamic_cast<Building::WorkStation*>(building))
@@ -368,7 +367,7 @@ void BuildSystem::Build(sf::Vector2f pos, Buildings type, bool isBuild)
 					keepObj = building;
 				}
 
-				building = nullptr;
+				Singleton::instance->map->setObj(pos.x, pos.y, building);
 			}
 			else if(!(p <= player->resource))
 				std::cout << "Need resources: wood:" << p.resources[Resources::resource::wood] << " iron:" << p.resources[Resources::resource::iron] <<

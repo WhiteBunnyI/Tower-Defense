@@ -11,7 +11,7 @@ Deposit::~Deposit()
 {
 	MapGenerator* map = Singleton::instance->map;
 	sf::Vector2f pos = map->CoordsToGridCoords(render->getPosition());
-	map->getObj(pos.x, pos.y) = nullptr;
+	map->setObj(pos.x, pos.y, nullptr, false);
 }
 
 int Deposit::Mine(int damage)
